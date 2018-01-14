@@ -1,8 +1,6 @@
 package ru.job4j;
 
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -10,8 +8,8 @@ import static org.junit.Assert.assertThat;
 * Test.
 *
 * @author Gregory Smirnov (artress@ngs.ru)
+* @since 12/01/2018
 * @version 1.0
-* @since 12.01.2018
 */
 public class CalculateTest {
 	
