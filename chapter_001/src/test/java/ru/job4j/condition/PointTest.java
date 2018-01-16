@@ -10,7 +10,6 @@ import static org.junit.Assert.assertThat;
  * @since 15/01/2018
  * @version 1.0
  */
-
 public class PointTest {
     @Test
     public void whenAddTwoPlusThreeThanFive() {
