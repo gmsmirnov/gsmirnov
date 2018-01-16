@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Class for testing elementary calculator.
- *
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 12/01/2018
  * @version 1.0

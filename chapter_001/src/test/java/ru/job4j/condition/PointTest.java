@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Class for testing distance calculation between two points.
- *
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 15/01/2018
  * @version 1.0
