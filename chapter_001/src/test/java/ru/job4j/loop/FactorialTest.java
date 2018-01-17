@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
  * Class for testing 'Factorial'.
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 18/01/2018
- * @version 1.0
+ * @version 1.1
  */
 public class FactorialTest {
     @Test
@@ -28,11 +28,15 @@ public class FactorialTest {
     }
 
     @Test
-    public void whenFactorialMinusOneThanMinusOne() {
+    public void whenFactorialMinusOneThanException() {
         Factorial fact = new Factorial();
-        int result = fact.calc(-1);
-        int expected = -1;
-        assertThat(result, is(expected));
+        try {
+            int result = fact.calc(-1);
+            int expected = -1;
+            assertThat(result, is(expected));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Bad argument: " + e.getMessage());
+        }
     }
 
     @Test
