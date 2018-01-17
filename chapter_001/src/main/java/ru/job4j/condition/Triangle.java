@@ -55,13 +55,9 @@ public class Triangle {
      * @param ab - distance from a-point to b-point.
      * @param bc - distance from b-point to c-point.
      * @param ca - distance from c-point to a-point.
-     * @return - 'true' if triangle exists or 'false' if not
+     * @return - 'true' if triangle exists or 'false' if not.
      */
     private boolean exist(double ab, double bc, double ca) {
-        boolean ifExist = false;
-        if ((ab + bc > ca) && (bc + ca > ab) && (ca + ab > bc)) {
-            ifExist = true;
-        }
-        return ifExist;
+        return ((ab + bc > ca) && (bc + ca > ab) && (ca + ab > bc));
     }
 }
