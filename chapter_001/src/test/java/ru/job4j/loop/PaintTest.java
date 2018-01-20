@@ -42,4 +42,34 @@ public class PaintTest {
                 .toString()
         ));
     }
+
+    @Test
+    public void whenLeftTrlHeightIs5() {
+        Paint paint = new Paint();
+        String rst = paint.leftTrl(5);
+        System.out.println(rst);
+        assertThat(rst, is(new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
+                .add("    ^")
+                .add("   ^^")
+                .add("  ^^^")
+                .add(" ^^^^")
+                .add("^^^^^")
+                .toString()
+        ));
+    }
+
+    @Test
+    public void whenRightTrlHeightIs5() {
+        Paint paint = new Paint();
+        String rst = paint.rightTrl(5);
+        System.out.println(rst);
+        assertThat(rst, is(new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
+                .add("^    ")
+                .add("^^   ")
+                .add("^^^  ")
+                .add("^^^^ ")
+                .add("^^^^^")
+                .toString()
+        ));
+    }
 }
