@@ -11,7 +11,7 @@ import static org.junit.Assert.assertThat;
  * Class for testing pyramid painting.
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 19/01/2018
- * @version 1.0
+ * @version 1.1
  */
 public class PaintTest {
     @Test
