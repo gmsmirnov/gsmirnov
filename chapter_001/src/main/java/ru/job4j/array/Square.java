@@ -13,7 +13,9 @@ public class Square {
      * @return array of squared numbers.
      */
     public int[] calculate(int bound) {
-        if (bound < 0) { throw new IllegalArgumentException("bound must be > 0"); }
+        if (bound < 0) {
+            throw new IllegalArgumentException("bound must be > 0");
+        }
         int[] rst = new int[bound];
         for (int i = 1; i <= rst.length; i++) {
             rst[i - 1] = (int) Math.pow(i, 2.0);
