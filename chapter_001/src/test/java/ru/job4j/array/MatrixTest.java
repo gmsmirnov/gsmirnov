@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
  * Testing 'Matrix'.
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 23/01/2018
- * @version 1.1
+ * @version 1.2
  */
 public class MatrixTest {
     @Test
@@ -17,7 +17,7 @@ public class MatrixTest {
         int size = 10;
         int[][] matrix = m.multiple(size);
         int expected = 5 * 8;
-        int result = matrix[5][8];
+        int result = matrix[5 - 1][8 - 1];
         assertThat(result, is(expected));
     }
 
@@ -27,7 +27,7 @@ public class MatrixTest {
         int size = 10;
         int[][] matrix = m.multiple(size);
         int expected = 9 * 6;
-        int result = matrix[9][6];
+        int result = matrix[9 - 1][6 - 1];
         assertThat(result, is(expected));
     }
 
@@ -42,7 +42,7 @@ public class MatrixTest {
             }
             System.out.println();
         }
-        int[][] expected = {{0, 0, 0, 0}, {0, 1, 2, 3}, {0, 2, 4, 6}, {0, 3, 6, 9}};
+        int[][] expected = {{1, 2, 3, 4}, {2, 4, 6, 8}, {3, 6, 9, 12}, {4, 8, 12, 16}};
         assertThat(result, is(expected));
     }
 }

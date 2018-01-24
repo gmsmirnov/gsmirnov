@@ -4,7 +4,7 @@ package ru.job4j.array;
  * Matrix.
  * @author Gregory Smirnov (artress@ngs.ru)
  * @since 23/01/2018
- * @version 1.0
+ * @version 1.1
  */
 public class Matrix {
     /**
@@ -16,7 +16,7 @@ public class Matrix {
         int[][] matrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                matrix[i][j] = (i) * (j);
+                matrix[i][j] = (i + 1) * (j + 1);
             }
         }
         return matrix;
