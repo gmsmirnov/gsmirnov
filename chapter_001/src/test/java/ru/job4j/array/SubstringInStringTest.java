@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
  * Tests the searching of substring in string.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 29/01/2018
  */
 public class SubstringInStringTest {
@@ -60,39 +60,21 @@ public class SubstringInStringTest {
         }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenSubstringIsLongerThanStringThanException() {
         SubstringInString sis = new SubstringInString();
-        boolean expected = false;
-        try {
-            boolean result = sis.contains("Ho-ho-ho", "Ho-ho-ho-ho");
-            assertThat(result, is(expected));
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        boolean result = sis.contains("Ho-ho-ho", "Ho-ho-ho-ho");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenSubstringIsEmptyThanException() {
         SubstringInString sis = new SubstringInString();
-        boolean expected = false;
-        try {
-            boolean result = sis.contains("Ho-ho-ho", "");
-            assertThat(result, is(expected));
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        boolean result = sis.contains("Ho-ho-ho", "");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void whenStringIsEmptyThanException() {
         SubstringInString sis = new SubstringInString();
-        boolean expected = false;
-        try {
-            boolean result = sis.contains("", "Ho-ho-ho");
-            assertThat(result, is(expected));
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        boolean result = sis.contains("", "Ho-ho-ho");
     }
 }

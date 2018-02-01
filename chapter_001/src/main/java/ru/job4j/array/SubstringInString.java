@@ -4,7 +4,7 @@ package ru.job4j.array;
  * Searching of substring in string.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 29/01/2018
  */
 public class SubstringInString {
@@ -18,21 +18,19 @@ public class SubstringInString {
         boolean result = false;
         char[] originArray = origin.toCharArray();
         char[] subArray = sub.toCharArray();
-        int counter = 0;
+        int counter;
         for (int i = 0; i < originArray.length - subArray.length + 1; i++) {
-            if (result) {
-                break;
-            }
+            counter = 0;
             for (int j = 0; j < subArray.length; j++) {
                 if (originArray[j + i] == subArray[j]) {
                     counter++;
                 } else {
-                    counter = 0;
                     break;
                 }
-                if (counter == subArray.length) {
-                    result = true;
-                }
+            }
+            if (counter == subArray.length) {
+                result = true;
+                break;
             }
         }
         return result;
