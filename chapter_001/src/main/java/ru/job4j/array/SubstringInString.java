@@ -8,6 +8,12 @@ package ru.job4j.array;
  * @since 29/01/2018
  */
 public class SubstringInString {
+    /**
+     * Searches the substring in string.
+     * @param origin - the string.
+     * @param sub - the substring
+     * @return true if substring is in string.
+     */
     public boolean contains(String origin, String sub) {
         if (origin.length() < sub.length()) {
             throw new IllegalArgumentException("The substring is longer than string.");
