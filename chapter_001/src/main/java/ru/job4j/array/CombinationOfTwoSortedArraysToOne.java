@@ -12,6 +12,7 @@ public class CombinationOfTwoSortedArraysToOne {
      * Combines two sorted arrays in one.
      * @param firstArray - the first sorted array.
      * @param secondArray - the second sorted array.
+     * @throws IllegalArgumentException when one of params is 0-length.
      * @return new sorted array.
      */
     public int[] arraysCombination(int[] firstArray, int[] secondArray) {
@@ -39,6 +40,39 @@ public class CombinationOfTwoSortedArraysToOne {
             }
             if (counterFirstArray == firstArray.length) {
                 newArray[newArrayIndex++] = secondArray[i];
+            }
+        }
+        return newArray;
+    }
+
+    /**
+     * Combines two sorted arrays in one.
+     * @param firstArray - the first sorted array.
+     * @param secondArray - the second sorted array.
+     * @throws IllegalArgumentException when one of params is 0-length.
+     * @return new sorted array.
+     */
+    public int[] arraysCombination2(int[] firstArray, int[] secondArray) {
+        if ((firstArray == null) || (secondArray == null)) {
+            throw new IllegalArgumentException("One of arrays is 0-length.");
+        }
+        int[] newArray = new int[firstArray.length + secondArray.length];
+        for (int k = 0, i = 0, j = 0; k < newArray.length; k++) {
+            if ((i < firstArray.length) && (j < secondArray.length) && (firstArray[i] <= secondArray[j])) {
+                newArray[k] = firstArray[i];
+                i++;
+                continue;
+            } else if ((i < firstArray.length) && (j < secondArray.length) && (firstArray[i] > secondArray[j])) {
+                newArray[k] = secondArray[j];
+                j++;
+                continue;
+            }
+            if (i == firstArray.length) {
+                newArray[k] = secondArray[j];
+                j++;
+            } else if (j == secondArray.length) {
+                newArray[k] = firstArray[i];
+                i++;
             }
         }
         return newArray;

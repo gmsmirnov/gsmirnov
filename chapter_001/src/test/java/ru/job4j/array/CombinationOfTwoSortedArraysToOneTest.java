@@ -16,7 +16,7 @@ public class CombinationOfTwoSortedArraysToOneTest {
         CombinationOfTwoSortedArraysToOne combo = new CombinationOfTwoSortedArraysToOne();
         int[] firstArray = {1, 2, 3, 4, 5, 6, 7, 8};
         int[] secondArray = {4, 6, 8, 10};
-        int[] result = combo.arraysCombination(firstArray, secondArray);
+        int[] result = combo.arraysCombination2(firstArray, secondArray);
         int[] expected = {1, 2, 3, 4, 4, 5, 6, 6, 7, 8, 8, 10};
         assertThat(result, is(expected));
     }
@@ -26,13 +26,13 @@ public class CombinationOfTwoSortedArraysToOneTest {
         CombinationOfTwoSortedArraysToOne combo = new CombinationOfTwoSortedArraysToOne();
         int[] firstArray = {4, 6, 8, 10};
         int[] secondArray = {1, 2, 3, 4, 5, 6, 7, 8};
-        int[] result = combo.arraysCombination(firstArray, secondArray);
+        int[] result = combo.arraysCombination2(firstArray, secondArray);
         int[] expected = {1, 2, 3, 4, 4, 5, 6, 6, 7, 8, 8, 10};
         assertThat(result, is(expected));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void whenOneOfArraysIsEmptyThanException() {
-        new CombinationOfTwoSortedArraysToOne().arraysCombination(null, new int[] {1, 2, 1});
+        new CombinationOfTwoSortedArraysToOne().arraysCombination2(null, new int[] {1, 2, 1});
     }
 }
