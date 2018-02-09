@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 public class ProfessionsTest {
     @Test
     public void whenTeacherTeachesHuman() {
-        Teacher teacher = new Teacher("Andrei", 7);
+        Teacher teacher = new Teacher("Andrei", 50, 7);
         Human human = new Human();
         for (int i = 0; i < 5; i++) {
             teacher.teacherWorks(human);
@@ -26,8 +26,8 @@ public class ProfessionsTest {
 
     @Test
     public void whenTeacherTeachesAndPunishesAdnDoctorHealsHuman() {
-        Teacher teacher = new Teacher("Ivan", 2);
-        Doctor doctor = new Doctor("Gregory House", 10);
+        Teacher teacher = new Teacher("Ivan", 60, 2);
+        Doctor doctor = new Doctor("Gregory House", 90, 10);
         Human human = new Human("Petroich", 5);
         for (int i = 0; i < 11; i++) {
             teacher.teacherWorks(human);
@@ -40,7 +40,7 @@ public class ProfessionsTest {
 
     @Test
     public void whenEngineerCreatesMechanismMechanismWorksAndEngineerRepairsMechanism() {
-        Engineer engineer = new Engineer("Kulibin", 10);
+        Engineer engineer = new Engineer("Kulibin", 90, 10);
         Mechanism mechanism = engineer.createNewMechanism("Velosiped");
         for (int i = 0; i < 50; i++) {
             mechanism.work();

@@ -16,10 +16,11 @@ public class Engineer extends Profession {
     /**
      * Constructor.
      * @param name - the name of engineer.
+     * @param educationLvl - the engineer education level.
      * @param repairLvl - the power of engineers repair ability.
      */
-    public Engineer(String name, int repairLvl) {
-        this.name = name;
+    public Engineer(String name, int educationLvl, int repairLvl) {
+        super(name, educationLvl);
         this.repairLvl = repairLvl;
     }
 

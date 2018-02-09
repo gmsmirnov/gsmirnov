@@ -21,10 +21,11 @@ public class Teacher extends Profession {
     /**
      * Constructor.
      * @param name - the name of teacher.
+     * @param educationLvl - the teacher education level.
      * @param teachLvl - the power of teacher teach ability.
      */
-    public Teacher(String name, int teachLvl) {
-        this.name = name;
+    public Teacher(String name, int educationLvl, int teachLvl) {
+        super(name, educationLvl);
         this.teachLvl = teachLvl;
         this.patience = 0;
     }

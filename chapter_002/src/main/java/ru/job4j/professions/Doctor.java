@@ -16,10 +16,11 @@ public class Doctor extends Profession {
     /**
      * Constructor.
      * @param name - the name of doctor.
+     * @param educationLvl - the doctor education level.
      * @param healLvl - the power of doctor heal ability.
      */
-    public Doctor(String name, int healLvl) {
-        this.name = name;
+    public Doctor(String name, int educationLvl, int healLvl) {
+        super(name, educationLvl);
         this.healLvl = healLvl;
     }
 

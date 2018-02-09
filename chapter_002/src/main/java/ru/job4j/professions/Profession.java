@@ -12,10 +12,7 @@ public class Profession extends Human {
      * Default constructor.
      */
     public Profession() {
-        this.name = "Idiot";
-        this.healthLvl = 100;
-        this.educationLvl = 10;
-        this.fatigue = 0;
+        super();
     }
 
     /**
@@ -24,8 +21,7 @@ public class Profession extends Human {
      * @param educationLvl - the human (professional) education level.
      */
     public Profession(String name, int educationLvl) {
-        this.name = name;
-        this.educationLvl = educationLvl;
+        super(name, educationLvl);
     }
 
     /**
