@@ -104,7 +104,7 @@ public class Item {
      *
      * @param creation - the request creation date.
      */
-    public void setCreqtion(long creation) {
+    public void setCreation(long creation) {
         this.creation = creation;
     }
 
