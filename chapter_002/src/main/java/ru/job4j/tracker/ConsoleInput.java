@@ -21,6 +21,7 @@ public class ConsoleInput implements Input {
      * @param request - a message to user.
      * @return - users answer.
      */
+    @Override
     public String ask(String request) {
         System.out.println(request);
         return scanner.nextLine();

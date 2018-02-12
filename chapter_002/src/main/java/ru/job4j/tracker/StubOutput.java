@@ -1,32 +1,28 @@
 package ru.job4j.tracker;
 
 /**
- * Provides applications console output for user.
+ * Stub class for output interface. Instead of translating message to user through interface, doing nothing.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
  * @version 1.0
- * @since 10/02/2018
+ * @since 12/02/2018
  */
-public class ConsoleOutput implements Output {
+public class StubOutput implements Output {
     /**
-     * Translates a single message to user.
+     * Doesn't translate a single message to user.
      *
      * @param message - translating message.
      */
     @Override
     public void print(String message) {
-        System.out.println(message);
     }
 
     /**
-     * Translates a group of messages to user.
+     * Doesn't translate a group of messages to user.
      *
      * @param messages - a group of translating messages.
      */
     @Override
     public void massPrint(String[] messages) {
-        for (String message : messages) {
-            System.out.println(message);
-        }
     }
 }

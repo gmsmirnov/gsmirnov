@@ -6,7 +6,7 @@ import java.util.Date;
  * The entry point. Provides the work of application.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 10/02/2018
  */
 public class StartUI {
@@ -143,8 +143,11 @@ public class StartUI {
      */
     private void deleteItem() {
         this.output.print("========Deleting the request==========");
-        this.tracker.delete(this.input.ask("Please enter the id of your request: "));
-        this.output.print("Your request was successfully deleted.");
+        if (this.tracker.delete(this.input.ask("Please enter the id of your request: "))) {
+            this.output.print("Your request was successfully deleted.");
+        } else {
+            this.output.print("There is no request with such id.");
+        }
     }
 
     /**

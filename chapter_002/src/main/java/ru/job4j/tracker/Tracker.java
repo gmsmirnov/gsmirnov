@@ -7,7 +7,7 @@ import java.util.UUID;
  * Class Tracker - class wrapper, that manage requests.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 07/02/2018
  */
 public class Tracker {
@@ -53,15 +53,19 @@ public class Tracker {
     /**
      * Deletes one request by id.
      *
+     * @return true if request was delete successfully, false if there is no request with such id.
      */
-    public void delete(String id) {
+    public boolean delete(String id) {
+        boolean result = false;
         for (int i = 0; i < this.items.length; i++) {
             if ((this.items[i] != null) && (this.items[i].getId().equals(id))) {
                 System.arraycopy(this.items, i + 1, this.items, i, this.position - i);
                 position--;
+                result = true;
                 break;
             }
         }
+        return result;
     }
 
     /**
