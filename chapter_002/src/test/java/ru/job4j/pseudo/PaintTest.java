@@ -35,6 +35,7 @@ public class PaintTest {
     public void backOutput() {
         System.setOut(this.stdout);
     }
+
     @Test
     public void whenDrawSquare() {
         new Paint().draw(new Square(4));
