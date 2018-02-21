@@ -7,7 +7,7 @@ import java.util.UUID;
  * Class Tracker - class wrapper, that manage requests.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 07/02/2018
  */
 public class Tracker {
@@ -39,15 +39,19 @@ public class Tracker {
      *
      * @param id - the id of replacement request.
      * @param item - new request that replaces older request.
+     * @return true if request was edited successfully, false if there is no request with such id.
      */
-    public void replace(String id, Item item) {
+    public boolean replace(String id, Item item) {
+        boolean result = false;
         item.setId(id);
         for (int i = 0; i < this.items.length; i++) {
             if ((this.items[i] != null) && (this.items[i].getId().equals(id))) {
                 this.items[i] = item;
+                result = true;
                 break;
             }
         }
+        return result;
     }
 
     /**
