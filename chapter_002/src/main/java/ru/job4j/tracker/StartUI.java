@@ -1,7 +1,7 @@
 package ru.job4j.tracker;
 
 /**
- * The entry point. Provides the work of application.
+ * The entry point. Provides the work of application. Main cycle.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
  * @version 1.2
@@ -42,8 +42,7 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.output, this.tracker);
         menu.fillMenu();
-
-        while (!menu.exit) {
+        while (!MenuTracker.exit) {
             this.output.print("\nEnter the menu point and press 'Enter' key:");
             menu.showMenu();
             try {

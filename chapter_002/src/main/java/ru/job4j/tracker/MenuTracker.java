@@ -3,10 +3,10 @@ package ru.job4j.tracker;
 import java.util.Date;
 
 /**
- * MenuTracker class. The applications menu and main cycle.
+ * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 20/02/2018
  */
 public class MenuTracker {
@@ -58,13 +58,13 @@ public class MenuTracker {
      * Menu filling.
      */
     public void fillMenu() {
-        this.actions[0] = new MenuTracker.AddItem();
+        this.actions[0] = this.new AddItem();
         this.actions[1] = new MenuTracker.ShawAllItems();
         this.actions[2] = new MenuTracker.EditItem();
         this.actions[3] = new MenuTracker.DeleteItem();
         this.actions[4] = new MenuTracker.FindItemById();
         this.actions[5] = new MenuTracker.FindItemsByName();
-        this.actions[6] = new MenuTracker.Exit();
+        this.actions[6] = new Exit();
     }
 
     /**
@@ -127,13 +127,13 @@ public class MenuTracker {
     }
 
     /**
-     * New request creating.
+     * New request creating. Non-static class.
      *
      * @author Gregory Smirnov (artress@ngs.ru)
      * @version 1.0
      * @since 20/02/2018
      */
-    private static class AddItem extends UserActionBase implements UserAction {
+    private class AddItem extends UserActionBase implements UserAction {
         /**
          * Define the unique key for each user action.
          *
@@ -391,7 +391,7 @@ public class MenuTracker {
             output.print("=====Finding the requests by name=====");
             String message = "There is no requests with this name.";
             Item[] items = tracker.findByName(input.ask("Please enter the name of your request: "));
-            if (items != null) {
+            if ((items != null) && (items.length != 0)) {
                 output.massPrint(this.massMessageCreation(items));
             } else {
                 output.print(message);
@@ -408,39 +408,46 @@ public class MenuTracker {
             return String.format("%s. %s", this.key(), "Find requests by name.");
         }
     }
+}
 
-    private static class Exit extends UserActionBase implements UserAction {
-        /**
-         * Define the unique key for each user action.
-         *
-         * @return key.
-         */
-        @Override
-        public int key() {
-            return 6;
-        }
+/**
+ * Application termination. Outer class in the same file.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.1
+ * @since 20/02/2018
+ */
+class Exit implements UserAction {
+    /**
+     * Define the unique key for each user action.
+     *
+     * @return key.
+     */
+    @Override
+    public int key() {
+        return 6;
+    }
 
-        /**
-         * Executing user action.
-         *
-         * @param input - the input interface for getting users messages.
-         * @param output - the output interface for feedback to user.
-         * @param tracker - requests container.
-         */
-        @Override
-        public void execute(Input input, Output output, Tracker tracker) {
-            output.print("=======Application termination!=======");
-            MenuTracker.exit = true;
-        }
+    /**
+     * Executing user action.
+     *
+     * @param input - the input interface for getting users messages.
+     * @param output - the output interface for feedback to user.
+     * @param tracker - requests container.
+     */
+    @Override
+    public void execute(Input input, Output output, Tracker tracker) {
+        output.print("=======Application termination!=======");
+        MenuTracker.exit = true;
+    }
 
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Exit.");
-        }
+    /**
+     * Describing user action.
+     *
+     * @return string with user action description.
+     */
+    @Override
+    public String info() {
+        return String.format("%s. %s", this.key(), "Exit.");
     }
 }
