@@ -42,14 +42,11 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.output, this.tracker);
         menu.fillMenu();
+        int[] range = menu.getMenuPointsRange();
         while (!MenuTracker.exit) {
             this.output.print("\nEnter the menu point and press 'Enter' key:");
             menu.showMenu();
-            try {
-                menu.select(Integer.valueOf(this.input.ask("Select menu point: ")));
-            } catch (Exception e) {
-                this.output.print("Wrong point. Please enter the correct number.");
-            }
+            menu.select(this.input.ask("Select menu point: ", range));
         }
     }
 
@@ -59,6 +56,6 @@ public class StartUI {
      * @param args - standard main params.
      */
     public static void main(String[] args) {
-        new StartUI(new ConsoleInput(), new ConsoleOutput(), new Tracker()).init();
+        new StartUI(new ValidateInput(), new ConsoleOutput(), new Tracker()).init();
     }
 }

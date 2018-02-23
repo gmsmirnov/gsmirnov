@@ -6,7 +6,7 @@ import java.util.Date;
  * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 20/02/2018
  */
 public class MenuTracker {
@@ -83,6 +83,19 @@ public class MenuTracker {
                 this.output.print(action.info());
             }
         }
+    }
+
+    /**
+     * Gets menu points range.
+     *
+     * @return - the range.
+     */
+    public int[] getMenuPointsRange() {
+        int[] range = new int[actionsQuantity];
+        for (int i = 0; i < range.length; i++) {
+            range[i] = this.actions[i].key();
+        }
+        return range;
     }
 
     /**
