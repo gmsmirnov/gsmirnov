@@ -1,10 +1,13 @@
 package ru.job4j.tracker;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * The entry point. Provides the work of application. Main cycle.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 10/02/2018
  */
 public class StartUI {
@@ -22,6 +25,11 @@ public class StartUI {
      * Requests database.
      */
     private final Tracker tracker;
+
+    /**
+     * Logger for massages and exceptions.
+     */
+    final static Logger LOGGER = LogManager.getLogger(StartUI.class);
 
     /**
      * StartUI constructor.
