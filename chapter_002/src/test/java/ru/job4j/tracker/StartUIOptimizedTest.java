@@ -70,10 +70,61 @@ public class StartUIOptimizedTest {
     }
 
     @Test
+    public void whenUserWantsToSeeAllItemsAfterEditionThanTrackerShowThoseItems() {
+        Input input = new StubInput(new String[]{"2", this.items[0].getId(), "New Name", "New Description", "1", "6"});
+        new StartUI(input, new StubOutput(), this.tracker).init();
+        this.result = new Item[this.tracker.findAll().length];
+        this.result = this.tracker.findAll();
+        this.expected = new Item[this.items.length];
+        this.expected = this.items;
+        this.expected[0] = this.tracker.findById(this.items[0].getId());
+    }
+
+    @Test
+    public void whenUserWantsToSeeAllItemsAfterDeleteThanTrackerShowThoseItems() {
+        Input input = new StubInput(new String[]{"3", this.items[0].getId(), "1", "6"});
+        new StartUI(input, new StubOutput(), this.tracker).init();
+        this.result = new Item[this.tracker.findAll().length];
+        this.result = this.tracker.findAll();
+        this.expected = new Item[this.items.length - 1];
+        System.arraycopy(this.items, 1, this.expected, 0, this.items.length - 1);
+    }
+
+    @Test
     public void whenUserWantsToSeeAllItemsWithDefinedNameThanTrackerShowThoseItems() {
         Input input = new StubInput(new String[]{"5", "Test Name", "6"});
         new StartUI(input, new StubOutput(), this.tracker).init();
         this.result = new Item[this.tracker.findByName("Test Name").length];
+        this.result = this.tracker.findAll();
+        this.expected = new Item[this.items.length];
+        this.expected = this.items;
+    }
+
+    @Test
+    public void whenUserWantsToSeeAllItemsWithDefinedNameAfterEditionThanTrackerShowThoseItems() {
+        Input input = new StubInput(new String[]{"2", this.items[0].getId(), "New Name", "New Description", "5", "New Name", "6"});
+        new StartUI(input, new StubOutput(), this.tracker).init();
+        this.result = new Item[this.tracker.findByName("New Name").length];
+        this.result = this.tracker.findByName("New Name");
+        this.expected = new Item[1];
+        this.expected[0] = this.tracker.findById(this.items[0].getId());
+    }
+
+    @Test
+    public void whenUserWantsToSeeAllItemsButEntersNotMenuPointThanTrackerShowThoseItems() {
+        Input input = new StubInput(new String[]{"A", "1", "6"});
+        new StartUI(input, new StubOutput(), this.tracker).init();
+        this.result = new Item[this.tracker.findAll().length];
+        this.result = this.tracker.findAll();
+        this.expected = new Item[this.items.length];
+        this.expected = this.items;
+    }
+
+    @Test
+    public void whenUserWantsToSeeAllItemsButEntersOutOfRangeMenuPointThanTrackerShowThoseItems() {
+        Input input = new StubInput(new String[]{"13", "1", "6"});
+        new StartUI(input, new StubOutput(), this.tracker).init();
+        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
         this.expected = new Item[this.items.length];
         this.expected = this.items;
