@@ -13,7 +13,7 @@ public class ConsoleInput implements Input {
     /**
      * Users answer reader.
      */
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * Asking users answer.

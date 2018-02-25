@@ -14,7 +14,7 @@ public class Tracker {
     /**
      * Container for requests.
      */
-    private Item[] items = new Item[100];
+    private final Item[] items = new Item[100];
 
     /**
      * The position of the last request in the container.

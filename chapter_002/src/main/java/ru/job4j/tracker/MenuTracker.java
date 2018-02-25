@@ -6,24 +6,24 @@ import java.util.Date;
  * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 20/02/2018
  */
 public class MenuTracker {
     /**
      * The instance of Input interface.
      */
-    private Input input;
+    private final Input input;
 
     /**
      * The instance of Output interface.
      */
-    private Output output;
+    private final Output output;
 
     /**
      * The instance of Tracker.
      */
-    private Tracker tracker;
+    private final Tracker tracker;
 
     /**
      * The quantity of menu items.
@@ -34,11 +34,6 @@ public class MenuTracker {
      * The array of menu items.
      */
     private UserAction[] actions = new UserAction[actionsQuantity];
-
-    /**
-     * The application termination flag.
-     */
-    protected static boolean exit = false;
 
 
     /**
@@ -57,14 +52,14 @@ public class MenuTracker {
     /**
      * Menu filling.
      */
-    public void fillMenu() {
+    public void fillMenu(StartUI ui) {
         this.actions[0] = this.new AddItem();
         this.actions[1] = new MenuTracker.ShawAllItems();
         this.actions[2] = new MenuTracker.EditItem();
         this.actions[3] = new MenuTracker.DeleteItem();
         this.actions[4] = new MenuTracker.FindItemById();
         this.actions[5] = new MenuTracker.FindItemsByName();
-        this.actions[6] = new Exit();
+        this.actions[6] = new Exit(ui);
     }
 
     /**
@@ -431,6 +426,12 @@ public class MenuTracker {
  * @since 20/02/2018
  */
 class Exit implements UserAction {
+    private final StartUI ui;
+
+    Exit(StartUI ui) {
+        this.ui = ui;
+    }
+
     /**
      * Define the unique key for each user action.
      *
@@ -451,7 +452,7 @@ class Exit implements UserAction {
     @Override
     public void execute(Input input, Output output, Tracker tracker) {
         output.print("=======Application termination!=======");
-        MenuTracker.exit = true;
+        this.ui.stop();
     }
 
     /**

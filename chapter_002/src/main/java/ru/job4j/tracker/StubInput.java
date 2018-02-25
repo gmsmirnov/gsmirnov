@@ -4,7 +4,7 @@ package ru.job4j.tracker;
  * Provides emulation of users answers through input interface.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 12/02/2018
  */
 public class StubInput implements Input {
@@ -42,12 +42,29 @@ public class StubInput implements Input {
      * Asking users answer.
      *
      * @param request - a message to user.
-     * @param range - the range of allowable points.
+     * @param range   - the range of allowable points.
      * @return - the point that user was selected.
+     * @throws MenuOutException - wrong menu point.
      */
     @Override
-    public int ask(String request, int[] range) {
-        //throw new UnsupportedOperationException("Unsupported operation");
-        return -1;
+    public int ask(String request, int[] range) throws MenuOutException {
+        int result = -1;
+        try {
+            int answer = Integer.parseInt(answers[position++]);
+            for (int value : range) {
+                if (value == answer) {
+                    result = answer;
+                    break;
+                }
+            }
+            if (result == -1) {
+                throw new MenuOutException("Wrong point, please, select correct menu point.");
+            }
+        } catch (MenuOutException moe) {
+            StartUI.LOGGER.error("Menu point not exist.");
+        } catch (NumberFormatException nfe) {
+            StartUI.LOGGER.error("Please enter menu point.");
+        }
+        return result;
     }
 }

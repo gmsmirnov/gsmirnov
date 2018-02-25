@@ -27,6 +27,11 @@ public class StartUI {
     private final Tracker tracker;
 
     /**
+     * The application termination flag.
+     */
+    private boolean exit = false;
+
+    /**
      * Logger for massages and exceptions.
      */
     final static Logger LOGGER = LogManager.getLogger(StartUI.class);
@@ -44,14 +49,18 @@ public class StartUI {
         this.tracker = tracker;
     }
 
+    public void stop() {
+        this.exit = true;
+    }
+
     /**
      * StartUI initialization. Main application cycle.
      */
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.output, this.tracker);
-        menu.fillMenu();
+        menu.fillMenu(this);
         int[] range = menu.getMenuPointsRange();
-        while (!MenuTracker.exit) {
+        while (!this.exit) {
             this.output.print("\nEnter the menu point and press 'Enter' key:");
             menu.showMenu();
             menu.select(this.input.ask("Select menu point: ", range));
