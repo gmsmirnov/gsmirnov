@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
  * The entry point. Provides the work of application. Main cycle.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.3
+ * @version 1.4
  * @since 10/02/2018
  */
 public class StartUI {
@@ -73,6 +73,6 @@ public class StartUI {
      * @param args - standard main params.
      */
     public static void main(String[] args) {
-        new StartUI(new ValidateInput(), new ConsoleOutput(), new Tracker()).init();
+        new StartUI(new ValidateInput(new ConsoleInput()), new ConsoleOutput(), new Tracker()).init();
     }
 }

@@ -4,7 +4,7 @@ package ru.job4j.tracker;
  * Provides emulation of users answers through input interface.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 12/02/2018
  */
 public class StubInput implements Input {
@@ -49,6 +49,22 @@ public class StubInput implements Input {
     @Override
     public int ask(String request, int[] range) throws MenuOutException {
         int result = -1;
+        int answer = Integer.parseInt(answers[position++]);
+        for (int value : range) {
+            if (value == answer) {
+                result = answer;
+                break;
+            }
+        }
+        if (result == -1) {
+            throw new MenuOutException("Wrong point, please, select correct menu point.");
+        }
+        return result;
+    }
+    /*
+    @Override
+    public int ask(String request, int[] range) throws MenuOutException {
+        int result = -1;
         boolean valid = false;
         do {
             try {
@@ -70,5 +86,5 @@ public class StubInput implements Input {
             }
         } while (!valid);
         return result;
-    }
+    }*/
 }
