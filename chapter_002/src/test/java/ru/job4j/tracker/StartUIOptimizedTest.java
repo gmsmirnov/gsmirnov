@@ -11,7 +11,7 @@ import static org.junit.Assert.assertThat;
  * Optimized class for testing emulating users answers, uses @Before & @After.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 18/02/2018
  */
 public class StartUIOptimizedTest {
@@ -112,8 +112,9 @@ public class StartUIOptimizedTest {
 
     @Test
     public void whenUserWantsToSeeAllItemsButEntersNotMenuPointThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"A", "1", "6"});
-        new StartUI(input, new StubOutput(), this.tracker).init();
+        Output output = new StubOutput();
+        Input input = new ValidateInput(new StubInput(new String[]{"A", "1", "6"}), output);
+        new StartUI(input, output, this.tracker).init();
         this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
         this.expected = new Item[this.items.length];
@@ -122,8 +123,9 @@ public class StartUIOptimizedTest {
 
     @Test
     public void whenUserWantsToSeeAllItemsButEntersOutOfRangeMenuPointThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"13", "1", "6"});
-        new StartUI(input, new StubOutput(), this.tracker).init();
+        Output output = new StubOutput();
+        Input input = new ValidateInput(new StubInput(new String[]{"13", "1", "6"}), output);
+        new StartUI(input, output, this.tracker).init();
         this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
         this.expected = new Item[this.items.length];

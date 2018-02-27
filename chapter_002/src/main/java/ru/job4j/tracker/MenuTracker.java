@@ -1,12 +1,10 @@
 package ru.job4j.tracker;
 
-import java.util.Date;
-
 /**
  * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.3
+ * @version 1.4
  * @since 20/02/2018
  */
 public class MenuTracker {
@@ -53,13 +51,13 @@ public class MenuTracker {
      * Menu filling.
      */
     public void fillMenu(StartUI ui) {
-        this.actions[0] = this.new AddItem();
-        this.actions[1] = new MenuTracker.ShawAllItems();
-        this.actions[2] = new MenuTracker.EditItem();
-        this.actions[3] = new MenuTracker.DeleteItem();
-        this.actions[4] = new MenuTracker.FindItemById();
-        this.actions[5] = new MenuTracker.FindItemsByName();
-        this.actions[6] = new Exit(ui);
+        this.actions[0] = this.new AddItem(0, "Add new request.");
+        this.actions[1] = new MenuTracker.ShawAllItems(1, "Show all requests.");
+        this.actions[2] = new MenuTracker.EditItem(2, "Edit request.");
+        this.actions[3] = new MenuTracker.DeleteItem(3, "Delete request.");
+        this.actions[4] = new MenuTracker.FindItemById(4, "Find request by id.");
+        this.actions[5] = new MenuTracker.FindItemsByName(5, "Find requests by name.");
+        this.actions[6] = new Exit(6, "Exit.", ui);
     }
 
     /**
@@ -94,62 +92,21 @@ public class MenuTracker {
     }
 
     /**
-     * Base class for menu item classes. Creates messages to translating to user through output interface.
-     *
-     * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
-     * @since 20/02/2018
-     */
-    private static class UserActionBase {
-        /**
-         * Creating a single message with requests details to translating to user through output interface.
-         *
-         * @param item - the request.
-         * @return - message.
-         */
-        protected String messageCreation(Item item) {
-            StringBuilder message = new StringBuilder("Request id: ");
-            message.append(item.getId());
-            message.append(". Name: ");
-            message.append(item.getName());
-            message.append(". Description: ");
-            message.append(item.getDesc());
-            message.append(". Creation date: ");
-            message.append(new Date(item.getCreation()).toString());
-            return message.toString();
-        }
-
-        /**
-         * Creating a group of messages with requests details to translating to user through output interface.
-         *
-         * @param items - requests.
-         * @return - messages.
-         */
-        protected String[] massMessageCreation(Item[] items) {
-            String[] messages = new String[items.length];
-            for (int i = 0; i < items.length; i++) {
-                messages[i] = this.messageCreation(items[i]);
-            }
-            return messages;
-        }
-    }
-
-    /**
      * New request creating. Non-static class.
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.2
      * @since 20/02/2018
      */
-    private class AddItem extends UserActionBase implements UserAction {
+    private class AddItem extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * AddItem constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 0;
+        public AddItem(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -167,34 +124,24 @@ public class MenuTracker {
             Item item = tracker.add(new Item(name, desc));
             output.print("Your request was registered successfully, its id is: " + item.getId());
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Add new request.");
-        }
     }
 
     /**
      * All requests displaying.
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.1
      * @since 20/02/2018
      */
-    private static class ShawAllItems extends UserActionBase implements UserAction {
+    private static class ShawAllItems extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * ShawAllItems constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 1;
+        public ShawAllItems(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -215,34 +162,24 @@ public class MenuTracker {
                 output.print(message);
             }
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Show all requests.");
-        }
     }
 
     /**
      * The request editing.
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.1
      * @since 20/02/2018
      */
-    private static class EditItem extends UserActionBase implements UserAction {
+    private static class EditItem extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * EditItem constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 2;
+        public EditItem(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -264,34 +201,24 @@ public class MenuTracker {
                 output.print("There is no request with such id.");
             }
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Edit request.");
-        }
     }
 
     /**
      * The request deleting.
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.1
      * @since 20/02/2018
      */
-    private static class DeleteItem extends UserActionBase implements UserAction {
+    private static class DeleteItem extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * DeleteItem constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 3;
+        public DeleteItem(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -310,34 +237,24 @@ public class MenuTracker {
                 output.print("There is no request with such id.");
             }
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Delete request.");
-        }
     }
 
     /**
      * The request detail displaying (finding by id of request).
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.1
      * @since 20/02/2018
      */
-    private static class FindItemById extends UserActionBase implements UserAction {
+    private static class FindItemById extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * FindItemById constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 4;
+        public FindItemById(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -357,34 +274,24 @@ public class MenuTracker {
             }
             output.print(message);
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Find request by id.");
-        }
     }
 
     /**
      * The requests details displaying (finding by name of request).
      *
      * @author Gregory Smirnov (artress@ngs.ru)
-     * @version 1.0
+     * @version 1.1
      * @since 20/02/2018
      */
-    private static class FindItemsByName extends UserActionBase implements UserAction {
+    private static class FindItemsByName extends BaseAction {
         /**
-         * Define the unique key for each user action.
+         * FindItemsByName constructor.
          *
-         * @return key.
+         * @param key - unique key.
+         * @param name - the name of user action.
          */
-        @Override
-        public int key() {
-            return 5;
+        public FindItemsByName(final int key, final String name) {
+            super(key, name);
         }
 
         /**
@@ -405,16 +312,6 @@ public class MenuTracker {
                 output.print(message);
             }
         }
-
-        /**
-         * Describing user action.
-         *
-         * @return string with user action description.
-         */
-        @Override
-        public String info() {
-            return String.format("%s. %s", this.key(), "Find requests by name.");
-        }
     }
 }
 
@@ -422,24 +319,25 @@ public class MenuTracker {
  * Application termination. Outer class in the same file.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 20/02/2018
  */
-class Exit implements UserAction {
+class Exit extends BaseAction {
+    /**
+     * The StartUI instance.
+     */
     private final StartUI ui;
 
-    Exit(StartUI ui) {
-        this.ui = ui;
-    }
-
     /**
-     * Define the unique key for each user action.
+     * Exit constructor.
      *
-     * @return key.
+     * @param key - unique key.
+     * @param name - the name of user action.
+     * @param ui - the entry point instance.
      */
-    @Override
-    public int key() {
-        return 6;
+    public Exit(final int key, final String name, StartUI ui) {
+        super(key, name);
+        this.ui = ui;
     }
 
     /**
@@ -453,15 +351,5 @@ class Exit implements UserAction {
     public void execute(Input input, Output output, Tracker tracker) {
         output.print("=======Application termination!=======");
         this.ui.stop();
-    }
-
-    /**
-     * Describing user action.
-     *
-     * @return string with user action description.
-     */
-    @Override
-    public String info() {
-        return String.format("%s. %s", this.key(), "Exit.");
     }
 }
