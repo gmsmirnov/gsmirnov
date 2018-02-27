@@ -61,30 +61,4 @@ public class StubInput implements Input {
         }
         return result;
     }
-    /*
-    @Override
-    public int ask(String request, int[] range) throws MenuOutException {
-        int result = -1;
-        boolean valid = false;
-        do {
-            try {
-                int answer = Integer.parseInt(answers[position++]);
-                for (int value : range) {
-                    if (value == answer) {
-                        result = answer;
-                        valid = true;
-                        break;
-                    }
-                }
-                if (result == -1) {
-                    throw new MenuOutException("Wrong point, please, select correct menu point.");
-                }
-            } catch (MenuOutException moe) {
-                StartUI.LOGGER.error("Menu point not exist.");
-            } catch (NumberFormatException nfe) {
-                StartUI.LOGGER.error("Please enter menu point.");
-            }
-        } while (!valid);
-        return result;
-    }*/
 }
