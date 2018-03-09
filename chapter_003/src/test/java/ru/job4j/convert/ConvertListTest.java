@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Tests conversion of two-dimensional array into ArrayList and backward.
@@ -56,6 +58,21 @@ public class ConvertListTest {
         }
         int[][] result = new ConvertList().toArray(list, 2);
         int[][] expected = {{1, 2, 3}, {4, 5, 6}};
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenConvertsIntegerArrayListToIntegerList() {
+        List<Integer[]> list = new ArrayList<Integer[]>();
+        list.add(new Integer[]{1, 2, 3});
+        list.add(new Integer[]{4, 5});
+        list.add(new Integer[]{6});
+        list.add(new Integer[]{7, 8, 9, 10});
+        List<Integer> result = new ConvertList().convert(list);
+        List<Integer> expected = new ArrayList<Integer>();
+        for (int i = 0; i < result.size(); i++) {
+            expected.add(i + 1);
+        }
         assertThat(result, is(expected));
     }
 }

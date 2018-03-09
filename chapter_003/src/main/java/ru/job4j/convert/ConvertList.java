@@ -1,6 +1,7 @@
 package ru.job4j.convert;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,6 +51,22 @@ public class ConvertList {
             if (index % columns == 0) {
                 row++;
                 index = 0;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Converts list of Integer arrays to list of Integer.
+     *
+     * @param list - the list of Integer arrays.
+     * @return - converted Integer list.
+     */
+    public List<Integer> convert(List<Integer[]> list) {
+        List<Integer> result = new ArrayList<Integer>();
+        for (Integer[] row : list) {
+            for (Integer element : row) {
+                result.add(element);
             }
         }
         return result;
