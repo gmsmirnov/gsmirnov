@@ -9,6 +9,13 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tests Phone Dictionary.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.0
+ * @since 08/03/2018
+ */
 public class PhoneDictionaryTest {
     private final PhoneDictionary phones = new PhoneDictionary();
     private final List<Person> persons = new ArrayList<Person>();
