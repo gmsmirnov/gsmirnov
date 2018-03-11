@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertThat;
  * Optimized class for testing emulating users answers with validation, uses @Before & @After.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 26/02/2018
  */
 public class ValidateInputTest {
@@ -39,8 +40,13 @@ public class ValidateInputTest {
 
     @Test
     public void whenInvalidInput() {
-        ValidateInput input = new ValidateInput(new StubInput(new String[] {"Invalid", "6"}), new ConsoleOutput());
-        input.ask("Enter", new int[] {6});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("Invalid");
+        inParams.add("6");
+        ValidateInput input = new ValidateInput(new StubInput(inParams), new ConsoleOutput());
+        ArrayList<Integer> inputPoint = new ArrayList<Integer>();
+        inputPoint.add(6);
+        input.ask("Enter", inputPoint);
         assertThat(this.out.toString(), is(String.format("Please enter menu point%n")));
     }
 }

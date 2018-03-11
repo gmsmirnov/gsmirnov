@@ -1,10 +1,12 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 /**
  * The interface for getting users messages.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 10/02/2018
  */
 interface Input {
@@ -23,5 +25,5 @@ interface Input {
      * @param range - the range of allowable points.
      * @return - the point that user was selected.
      */
-    int ask(String request, int[] range);
+    int ask(String request, ArrayList<Integer> range);
 }

@@ -2,6 +2,8 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.junit.Assert.assertNull;
@@ -11,16 +13,21 @@ import static org.junit.Assert.assertThat;
  * Class for testing emulating users answers.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 12/02/2018
  */
 public class StartUITest {
     @Test
     public void whenUserAddNewItemThanTrackerHasTheItemWithTheSameName() {
         Tracker tracker = new Tracker();
-        Input input = new StubInput(new String[]{"0", "test name", "test description", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("0");
+        inParams.add("test name");
+        inParams.add("test description");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
-        assertThat(tracker.findAll()[0].getName(), is("test name"));
+        assertThat(tracker.findAll().get(0).getName(), is("test name"));
     }
 
     @Test
@@ -28,9 +35,15 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("test name", "test description");
         tracker.add(item);
-        Input input = new StubInput(new String[]{"2", item.getId(), "new name", "new description", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("2");
+        inParams.add(item.getId());
+        inParams.add("new name");
+        inParams.add("new description");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
-        assertThat(tracker.findAll()[0].getName(), is("new name"));
+        assertThat(tracker.findAll().get(0).getName(), is("new name"));
     }
 
     @Test
@@ -38,7 +51,11 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("test name", "test description");
         tracker.add(item);
-        Input input = new StubInput(new String[]{"3", item.getId(), "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("3");
+        inParams.add(item.getId());
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
         assertNull(tracker.findById(item.getId()));
     }
@@ -48,7 +65,11 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("test name", "test description");
         tracker.add(item);
-        Input input = new StubInput(new String[]{"4", item.getId(), "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("4");
+        inParams.add(item.getId());
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
         assertThat(tracker.findById(item.getId()).getId(), is(item.getId()));
     }
@@ -56,26 +77,33 @@ public class StartUITest {
     @Test
     public void whenUserAddNewItemsThanTrackerHasAllThisItems() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[20];
+        ArrayList<Item> items = new ArrayList<Item>();
         for (int i = 0; i < 20; i++) {
-            items[i] = new Item("Item: " + i, "Description " + i);
-            tracker.add(items[i]);
+            items.add(new Item("Item: " + i, "Description " + i));
+            tracker.add(items.get(i));
         }
-        Input input = new StubInput(new String[]{"1", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
-        assertThat(tracker.findAll(), arrayContainingInAnyOrder(items));
+        assertThat(tracker.findAll().toArray(), arrayContainingInAnyOrder(items.toArray()));
     }
 
     @Test
     public void whenUserAddNewItemsWithOneNameThanTrackerHasThisItems() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[20];
+        ArrayList<Item> items = new ArrayList<Item>();
         for (int i = 0; i < 20; i++) {
-            items[i] = new Item("Item", "Description " + i);
-            tracker.add(items[i]);
+            items.add(new Item("Item", "Description " + i));
+            tracker.add(items.get(i));
         }
-        Input input = new StubInput(new String[]{"5", "Item", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("5");
+        inParams.add("Item");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), tracker).init();
-        assertThat(tracker.findByName("Item"), arrayContainingInAnyOrder(items));
+        assertThat(tracker.findByName("Item").toArray(), arrayContainingInAnyOrder(items.toArray()));
     }
 }

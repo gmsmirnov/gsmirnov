@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 /**
  * Validate console input.
  *
@@ -48,7 +50,7 @@ public class ValidateInput implements Input {
      * @return - the point that user was selected.
      */
     @Override
-    public int ask(String request, int[] range) {
+    public int ask(String request, ArrayList<Integer> range) {
         int result = -1;
         boolean valid = false;
         do {

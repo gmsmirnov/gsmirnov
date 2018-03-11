@@ -1,12 +1,13 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Basic abstract class for user actions.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 27/02/2018
  */
 public abstract class BaseAction implements UserAction {
@@ -78,10 +79,10 @@ public abstract class BaseAction implements UserAction {
      * @param items - requests.
      * @return - messages.
      */
-    protected String[] massMessageCreation(Item[] items) {
-        String[] messages = new String[items.length];
-        for (int i = 0; i < items.length; i++) {
-            messages[i] = this.messageCreation(items[i]);
+    protected ArrayList<String> massMessageCreation(ArrayList<Item> items) {
+        ArrayList<String> messages = new ArrayList<String>();
+        for (int i = 0; i < items.size(); i++) {
+            messages.add(this.messageCreation(items.get(i)));
         }
         return messages;
     }

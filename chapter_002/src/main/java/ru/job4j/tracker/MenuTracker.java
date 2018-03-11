@@ -1,10 +1,12 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 /**
  * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.4
+ * @version 1.5
  * @since 20/02/2018
  */
 public class MenuTracker {
@@ -24,14 +26,9 @@ public class MenuTracker {
     private final Tracker tracker;
 
     /**
-     * The quantity of menu items.
-     */
-    private final int actionsQuantity = 7;
-
-    /**
      * The array of menu items.
      */
-    private UserAction[] actions = new UserAction[actionsQuantity];
+    private final ArrayList<UserAction> actions = new ArrayList<UserAction>();
 
 
     /**
@@ -51,20 +48,20 @@ public class MenuTracker {
      * Menu filling.
      */
     public void fillMenu(StartUI ui) {
-        this.actions[0] = this.new AddItem(0, "Add new request.");
-        this.actions[1] = new MenuTracker.ShawAllItems(1, "Show all requests.");
-        this.actions[2] = new MenuTracker.EditItem(2, "Edit request.");
-        this.actions[3] = new MenuTracker.DeleteItem(3, "Delete request.");
-        this.actions[4] = new MenuTracker.FindItemById(4, "Find request by id.");
-        this.actions[5] = new MenuTracker.FindItemsByName(5, "Find requests by name.");
-        this.actions[6] = new Exit(6, "Exit.", ui);
+        this.actions.add(this.new AddItem(0, "Add new request."));
+        this.actions.add(new MenuTracker.ShawAllItems(1, "Show all requests."));
+        this.actions.add(new MenuTracker.EditItem(2, "Edit request."));
+        this.actions.add(new MenuTracker.DeleteItem(3, "Delete request."));
+        this.actions.add(new MenuTracker.FindItemById(4, "Find request by id."));
+        this.actions.add(new MenuTracker.FindItemsByName(5, "Find requests by name."));
+        this.actions.add(new Exit(6, "Exit.", ui));
     }
 
     /**
      * Executing of action of menu item.
      */
     public void select(int key) {
-        this.actions[key].execute(this.input, this.output, this.tracker);
+        this.actions.get(key).execute(this.input, this.output, this.tracker);
     }
 
     /**
@@ -83,10 +80,10 @@ public class MenuTracker {
      *
      * @return - the range.
      */
-    public int[] getMenuPointsRange() {
-        int[] range = new int[actionsQuantity];
-        for (int i = 0; i < range.length; i++) {
-            range[i] = this.actions[i].key();
+    public ArrayList<Integer> getMenuPointsRange() {
+        ArrayList<Integer> range = new ArrayList<Integer>();
+        for (int i = 0; i < this.actions.size(); i++) {
+            range.add(this.actions.get(i).key());
         }
         return range;
     }
@@ -154,7 +151,7 @@ public class MenuTracker {
         @Override
         public void execute(Input input, Output output, Tracker tracker) {
             output.print("========Showing all requests==========");
-            Item[] items = tracker.findAll();
+            ArrayList<Item> items = tracker.findAll();
             String message = "There is no any requests.";
             if (items != null) {
                 output.massPrint(this.massMessageCreation(items));
@@ -305,8 +302,8 @@ public class MenuTracker {
         public void execute(Input input, Output output, Tracker tracker) {
             output.print("=====Finding the requests by name=====");
             String message = "There is no requests with this name.";
-            Item[] items = tracker.findByName(input.ask("Please enter the name of your request: "));
-            if ((items != null) && (items.length != 0)) {
+            ArrayList<Item> items = tracker.findByName(input.ask("Please enter the name of your request: "));
+            if ((items != null) && (items.size() != 0)) {
                 output.massPrint(this.massMessageCreation(items));
             } else {
                 output.print(message);

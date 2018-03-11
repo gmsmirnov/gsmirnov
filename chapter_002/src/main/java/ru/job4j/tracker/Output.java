@@ -1,7 +1,13 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 /**
  * The interface for feedback to user.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.1
+ * @since 10/02/2018
  */
 interface Output {
     /**
@@ -16,5 +22,5 @@ interface Output {
      *
      * @param messages - a group of translating messages.
      */
-    void massPrint(String[] messages);
+    void massPrint(ArrayList<String> messages);
 }

@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.junit.Assert.assertThat;
 
@@ -28,17 +30,17 @@ public class StartUIOptimizedTest {
     /**
      * The array of initialized items. Needs for assert method.
      */
-    private final Item[] items = new Item[initNumber];
+    private final ArrayList<Item> items = new ArrayList<Item>();
 
     /**
      * The result for assert method.
      */
-    private Item[] result;
+    private ArrayList<Item> result;
 
     /**
      * The expected for assert method.
      */
-    private Item[] expected;
+    private ArrayList<Item> expected;
 
     /**
      * Initialize tracker before test.
@@ -46,8 +48,8 @@ public class StartUIOptimizedTest {
     @Before
     public void init() {
         for (int i = 0; i < initNumber; i++) {
-            this.items[i] = new Item("Test Name", "Test Description" + i);
-            this.tracker.add(items[i]);
+            this.items.add(new Item("Test Name", "Test Description" + i));
+            this.tracker.add(items.get(i));
         }
     }
 
@@ -56,79 +58,102 @@ public class StartUIOptimizedTest {
      */
     @After
     public void verification() {
-        assertThat(result, arrayContainingInAnyOrder(expected));
+        assertThat(result.toArray(), arrayContainingInAnyOrder(expected.toArray()));
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"1", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), this.tracker).init();
-        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length];
         this.expected = this.items;
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsAfterEditionThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"2", this.items[0].getId(), "New Name", "New Description", "1", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("2");
+        inParams.add(this.items.get(0).getId());
+        inParams.add("New Name");
+        inParams.add("New Description");
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), this.tracker).init();
-        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length];
         this.expected = this.items;
-        this.expected[0] = this.tracker.findById(this.items[0].getId());
+        this.expected.set(0, this.tracker.findById(this.items.get(0).getId()));
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsAfterDeleteThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"3", this.items[0].getId(), "1", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("3");
+        inParams.add(this.items.get(0).getId());
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), this.tracker).init();
-        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length - 1];
-        System.arraycopy(this.items, 1, this.expected, 0, this.items.length - 1);
+        this.items.remove(0);
+        this.expected = this.items;
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsWithDefinedNameThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"5", "Test Name", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("5");
+        inParams.add("Test Name");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), this.tracker).init();
-        this.result = new Item[this.tracker.findByName("Test Name").length];
-        this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length];
+        this.result = this.tracker.findByName("Test Name");
         this.expected = this.items;
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsWithDefinedNameAfterEditionThanTrackerShowThoseItems() {
-        Input input = new StubInput(new String[]{"2", this.items[0].getId(), "New Name", "New Description", "5", "New Name", "6"});
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("2");
+        inParams.add(this.items.get(0).getId());
+        inParams.add("New Name");
+        inParams.add("New Description");
+        inParams.add("5");
+        inParams.add("New Name");
+        inParams.add("6");
+        Input input = new StubInput(inParams);
         new StartUI(input, new StubOutput(), this.tracker).init();
-        this.result = new Item[this.tracker.findByName("New Name").length];
         this.result = this.tracker.findByName("New Name");
-        this.expected = new Item[1];
-        this.expected[0] = this.tracker.findById(this.items[0].getId());
+        this.expected = new ArrayList<Item>();
+        this.expected.add(this.tracker.findById(this.items.get(0).getId()));
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsButEntersNotMenuPointThanTrackerShowThoseItems() {
         Output output = new StubOutput();
-        Input input = new ValidateInput(new StubInput(new String[]{"A", "1", "6"}), output);
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("A");
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new ValidateInput(new StubInput(inParams), output);
         new StartUI(input, output, this.tracker).init();
-        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length];
         this.expected = this.items;
     }
 
     @Test
     public void whenUserWantsToSeeAllItemsButEntersOutOfRangeMenuPointThanTrackerShowThoseItems() {
         Output output = new StubOutput();
-        Input input = new ValidateInput(new StubInput(new String[]{"13", "1", "6"}), output);
+        ArrayList<String> inParams = new ArrayList<String>();
+        inParams.add("13");
+        inParams.add("1");
+        inParams.add("6");
+        Input input = new ValidateInput(new StubInput(inParams), output);
         new StartUI(input, output, this.tracker).init();
-        this.result = new Item[this.tracker.findAll().length];
         this.result = this.tracker.findAll();
-        this.expected = new Item[this.items.length];
         this.expected = this.items;
     }
 }

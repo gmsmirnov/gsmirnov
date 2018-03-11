@@ -3,6 +3,9 @@ package ru.job4j.tracker;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * The entry point. Provides the work of application. Main cycle.
  *
@@ -59,7 +62,7 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.output, this.tracker);
         menu.fillMenu(this);
-        int[] range = menu.getMenuPointsRange();
+        ArrayList<Integer> range = menu.getMenuPointsRange();
         while (!this.exit) {
             this.output.print("\nEnter the menu point and press 'Enter' key:");
             menu.showMenu();

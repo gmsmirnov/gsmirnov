@@ -1,12 +1,13 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Provides applications console input for user.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 10/02/2018
  */
 public class ConsoleInput implements Input {
@@ -36,7 +37,7 @@ public class ConsoleInput implements Input {
      * @throws MenuOutException - wrong menu point.
      */
     @Override
-    public int ask(String request, int[] range) throws MenuOutException {
+    public int ask(String request, ArrayList<Integer> range) throws MenuOutException {
         System.out.println(request);
         int result = -1;
         int answer = Integer.parseInt(scanner.nextLine());

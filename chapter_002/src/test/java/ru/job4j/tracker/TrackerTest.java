@@ -2,6 +2,8 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -10,7 +12,7 @@ import static org.junit.Assert.assertThat;
  * Tracker test.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 07/02/2018
  */
 public class TrackerTest {
@@ -19,43 +21,43 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("Test 1", "Test 1 - Description");
         tracker.add(item);
-        assertThat(tracker.findAll()[0], is(item));
+        assertThat(tracker.findAll().get(0), is(item));
     }
 
     @Test
     public void whenAddNewItemsThanFindItemById() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[10];
-        String[] key = new String[10];
+        ArrayList<Item> items = new ArrayList<Item>();
+        ArrayList<String> key = new ArrayList<String>();
         for (int i = 0; i < 10; i++) {
-            items[i] = new Item("Tested item", "Tested item description");
-            tracker.add(items[i]);
-            key[i] = items[i].getId();
+            items.add(new Item("Tested item", "Tested item description"));
+            tracker.add(items.get(i));
+            key.add(items.get(i).getId());
         }
-        assertThat(tracker.findById(key[2]), is(items[2]));
+        assertThat(tracker.findById(key.get(2)), is(items.get(2)));
     }
 
     @Test
     public void whenAddNewItemsByNameThanFindByNameItems() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[10];
+        ArrayList<Item> items = new ArrayList<Item>();
         for (int i = 0; i < 10; i++) {
-            items[i] = new Item("Tested item", "Tested item description");
-            tracker.add(items[i]);
+            items.add(new Item("Tested item", "Tested item description"));
+            tracker.add(items.get(i));
             tracker.add(new Item("Non tested item", "Non tested item description"));
         }
-        assertThat(tracker.findByName("Tested item"), arrayContainingInAnyOrder(items));
+        assertThat(tracker.findByName("Tested item").toArray(), arrayContainingInAnyOrder(items.toArray()));
     }
 
     @Test
     public void whenAddNewItemsThanFindAllItems() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[10];
+        ArrayList<Item> items = new ArrayList<Item>();
         for (int i = 0; i < 10; i++) {
-            items[i] = new Item("Tested item", "Tested item description");
-            tracker.add(items[i]);
+            items.add(new Item("Tested item", "Tested item description"));
+            tracker.add(items.get(i));
         }
-        assertThat(tracker.findAll(), arrayContainingInAnyOrder(items));
+        assertThat(tracker.findAll().toArray(), arrayContainingInAnyOrder(items.toArray()));
     }
 
     @Test
@@ -71,19 +73,19 @@ public class TrackerTest {
     @Test
     public void whenDeletingItemThanFindAllWithoutDeletedItem() {
         Tracker tracker = new Tracker();
-        Item[] items = new Item[20];
+        ArrayList<Item> items = new ArrayList<Item>();
         for (int i = 0; i < 10; i++) {
-            items[i] = new Item("Tested item", "Tested item description");
-            tracker.add(items[i]);
+            items.add(new Item("Tested item", "Tested item description"));
+            tracker.add(items.get(i));
         }
         Item deletedItem = new Item("Del", "Deleted item");
         tracker.add(deletedItem);
         String key = deletedItem.getId();
         for (int i = 10; i < 20; i++) {
-            items[i] = new Item("Tested item", "Tested item description");
-            tracker.add(items[i]);
+            items.add(new Item("Tested item", "Tested item description"));
+            tracker.add(items.get(i));
         }
         tracker.delete(key);
-        assertThat(tracker.findAll(), arrayContainingInAnyOrder(items));
+        assertThat(tracker.findAll().toArray(), arrayContainingInAnyOrder(items.toArray()));
     }
 }

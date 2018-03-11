@@ -1,17 +1,19 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 /**
  * Provides emulation of users answers through input interface.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.3
+ * @version 1.4
  * @since 12/02/2018
  */
 public class StubInput implements Input {
     /**
      * The array of emulates users answers.
      */
-    private String[] answers;
+    private final ArrayList<String> answers = new ArrayList<>();
 
     /**
      * Current position in array of emulated users answers.
@@ -23,8 +25,8 @@ public class StubInput implements Input {
      *
      * @param answers - the array of emulated users answers.
      */
-    public StubInput(String[] answers) {
-        this.answers = answers;
+    public StubInput(ArrayList<String> answers) {
+        this.answers.addAll(answers);
     }
 
     /**
@@ -35,7 +37,7 @@ public class StubInput implements Input {
      */
     @Override
     public String ask(String request) {
-        return answers[position++];
+        return this.answers.get(position++);
     }
 
     /**
@@ -47,9 +49,9 @@ public class StubInput implements Input {
      * @throws MenuOutException - wrong menu point.
      */
     @Override
-    public int ask(String request, int[] range) throws MenuOutException {
+    public int ask(String request, ArrayList<Integer> range) throws MenuOutException {
         int result = -1;
-        int answer = Integer.parseInt(answers[position++]);
+        int answer = Integer.parseInt(this.answers.get(position++));
         for (int value : range) {
             if (value == answer) {
                 result = answer;
