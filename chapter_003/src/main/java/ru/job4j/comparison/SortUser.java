@@ -6,7 +6,7 @@ import java.util.*;
  * Sorting users.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 13/03/2018
  */
 public class SortUser {
