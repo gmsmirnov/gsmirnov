@@ -58,6 +58,42 @@ public class User implements Comparable<User> {
     }
 
     /**
+     * Equivalence of users.
+     *
+     * @param other - the user to compare.
+     * @return true if users are equals.
+     */
+    @Override
+    public boolean equals(Object other) {
+        boolean result;
+        if (this == other) {
+            result = true;
+        } else if (other == null || getClass() != other.getClass()) {
+            result = false;
+        } else {
+            User user = (User) other;
+            if (age != user.age) {
+                result = false;
+            } else {
+                result = name != null ? name.equals(user.name) : user.name == null;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Calculates hash code.
+     *
+     * @return hash code.
+     */
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + age;
+        return result;
+    }
+
+    /**
      * Comparison of users.
      *
      * @param user - the user to compare with THIS user.
