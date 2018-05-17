@@ -22,8 +22,9 @@ public class SimpleArray<E> implements Iterable<E> {
     private int index = 0;
 
     /**
+     * Creates simple array of specified size.
      *
-     * @param size
+     * @param size - the specified size.
      */
     public SimpleArray(int size) {
         this.values = new Object[size];
