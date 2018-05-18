@@ -7,7 +7,7 @@ package ru.job4j.generic;
  * @version 1.0
  * @since 11/05/2018
  */
-public class UserStore<T extends User> extends AbstractStore<T> {
+public class UserStore extends AbstractStore<User> {
     /**
      * Creates the storage for User-type elements of specified size.
      *

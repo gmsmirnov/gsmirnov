@@ -10,7 +10,7 @@ import static org.hamcrest.core.Is.is;
 public class UserStoreTest {
     @Test
     public void whenAddNewUserThenContainerHasIt() {
-        UserStore<User> store = new UserStore<User>(10);
+        UserStore store = new UserStore(10);
         User petro = new User("petro_01", "petrovich", 50);
         store.add(petro);
         assertThat(store.findById("petro_01"), is(petro));
@@ -18,7 +18,7 @@ public class UserStoreTest {
 
     @Test
     public void whenReplaceUserThenContainerHasNewUser() {
-        UserStore<User> store = new UserStore<User>(10);
+        UserStore store = new UserStore(10);
         User petro = new User("petro_01", "petrovich", 50);
         User timon = new User("timon_01", "timon", 45);
         store.add(petro);
@@ -30,7 +30,7 @@ public class UserStoreTest {
 
     @Test
     public void whenDeleteUserThenContainerHasNotThatUser() {
-        UserStore<User> store = new UserStore<User>(10);
+        UserStore store = new UserStore(10);
         User petro = new User("petro_01", "petrovich", 50);
         store.add(petro);
         assertThat(store.findById("petro_01"), is(petro));

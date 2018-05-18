@@ -7,7 +7,7 @@ package ru.job4j.generic;
  * @version 1.0
  * @since 11/05/2018
  */
-public class RoleStore<T extends Role> extends AbstractStore<T> {
+public class RoleStore extends AbstractStore<Role> {
     /**
      * Creates the storage for Role-type elements of specified size.
      *
