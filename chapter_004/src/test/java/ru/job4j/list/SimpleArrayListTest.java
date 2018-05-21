@@ -18,28 +18,69 @@ import static org.junit.Assert.*;
  * @since 17/05/2018
  */
 public class SimpleArrayListTest {
-    private SimpleArrayList<Integer> simpleArrayList;
+    private BaseList<Integer> intList;
 
     private Iterator<Integer> it;
 
     @Before
     public void init() {
-        this.simpleArrayList = new SimpleArrayList<Integer>(10);
-        this.simpleArrayList.add(0);
-        this.simpleArrayList.add(1);
-        this.simpleArrayList.add(2);
-        this.simpleArrayList.add(3);
-        this.simpleArrayList.add(4);
-        this.simpleArrayList.add(5);
-        this.it = this.simpleArrayList.iterator();
+        this.intList = new SimpleArrayList<Integer>(10);
+        for (int i = 0; i < 5; i++) {
+            this.intList.add(i);
+        }
+        this.it = this.intList.iterator();
     }
 
     @Test
-    public void whenAddIntegerToContainerThenGetInteger() {
-        SimpleArrayList<Integer> simpleArray = new SimpleArrayList<Integer>(10);
-        simpleArray.add(5);
-        int result = simpleArray.get(0);
-        assertThat(result, is(5));
+    public void whenGetIntegerFromListThenTrue() {
+        for (int i = 0; i < 5; i++) {
+            assertThat(this.intList.get(i), is(i));
+        }
+    }
+
+    @Test (expected = ArrayIndexOutOfBoundsException.class)
+    public void whenGetOutOfBoundsThenArrayIndexOutOfBoundsException() {
+        assertThat(this.intList.get(10), is(10));
+    }
+
+    @Test
+    public void whenSetNewValueThenReturnOldValue() {
+        assertThat(this.intList.get(0), is(0));
+        assertThat(this.intList.set(0, 10), is(0));
+        assertThat(this.intList.get(0), is(10));
+    }
+
+    @Test
+    public void whenRemoveThenReturnOldValue() {
+        assertThat(this.intList.get(0), is(0));
+        assertThat(this.intList.get(1), is(1));
+        assertThat(this.intList.get(2), is(2));
+        assertThat(this.intList.remove(1), is(1));
+        assertThat(this.intList.get(0), is(0));
+        assertThat(this.intList.get(1), is(2));
+        assertThat(this.intList.get(2), is(3));
+    }
+
+    @Test (expected = NoSuchElementException.class)
+    public void whenIteratorWalksThenIteratorGetsAllElementsWhileThereAreAnyElements() {
+        assertThat(this.it.hasNext(), is(true));
+        assertThat(this.it.next(), is(0));
+        assertThat(this.it.hasNext(), is(true));
+        assertThat(this.it.next(), is(1));
+        assertThat(this.it.hasNext(), is(true));
+        assertThat(this.it.next(), is(2));
+        assertThat(this.it.hasNext(), is(true));
+        assertThat(this.it.next(), is(3));
+        assertThat(this.it.hasNext(), is(true));
+        assertThat(this.it.next(), is(4));
+        assertThat(this.it.hasNext(), is(false));
+        this.it.next();
+    }
+
+    @Test
+    public void whenListIsEmptyIteratorReturnsFalse() {
+        Iterator<String> it = new SimpleArrayList<String>(10).iterator();
+        assertThat(it.hasNext(), is(false));
     }
 
     @Test
@@ -58,89 +99,37 @@ public class SimpleArrayListTest {
         assertThat(result, is(5.0));
     }
 
-    @Test (expected = ArrayIndexOutOfBoundsException.class)
-    public void whenAddOutOfBoundsThenArrayIndexOutOfBoundsException() {
-        SimpleArrayList<Integer> simpleArray = new SimpleArrayList<Integer>(1);
-        simpleArray.add(5);
-        simpleArray.add(5);
-    }
-
     @Test
-    public void whenSetIntegerToContainerThenGetOldIntegerValue() {
-        SimpleArrayList<Integer> simpleArray = new SimpleArrayList<Integer>(10);
-        simpleArray.add(5);
-        int result = simpleArray.set(0, 7);
-        assertThat(result, is(5));
-        assertThat(simpleArray.get(0), is(7));
-    }
-
-    @Test
-    public void whenRemoveIntegerFromContainerThenGetIntegerValueAndMoveElements() {
-        assertThat(this.simpleArrayList.remove(2), is(2));
-        assertThat(this.simpleArrayList.get(0), is(0));
-        assertThat(this.simpleArrayList.get(1), is(1));
-        assertThat(this.simpleArrayList.get(2), is(3));
-        assertThat(this.simpleArrayList.get(3), is(4));
-        assertThat(this.simpleArrayList.get(4), is(5));
-    }
-
-    @Test (expected = NoSuchElementException.class)
-    public void whenIteratorTestsThenIteratorGetsAllElementsWhileThereAreAnyElements() {
+    public void whenRemoveValueFromContainerThenGetThatValueAndMoveElements() {
+        assertThat(this.intList.remove(2), is(2));
+        this.it = this.intList.iterator();
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(0));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(1));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(2));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(3));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(4));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(5));
         assertThat(this.it.hasNext(), is(false));
-        this.it.next();
+        assertThat(this.intList.get(0), is(0));
+        assertThat(this.intList.get(1), is(1));
+        assertThat(this.intList.get(2), is(3));
+        assertThat(this.intList.get(3), is(4));
     }
 
     @Test
-    public void  whenSimpleArrayIsEmptyIteratorReturnsFalse() {
-        Iterator<String> it = new SimpleArrayList<String>(10).iterator();
-        assertThat(it.hasNext(), is(false));
-    }
-
-    @Test
-    public void whenRemoveIntegerFromContainerThenGetIntegerValueAndMoveElements2() {
-        assertThat(this.simpleArrayList.remove(3), is(3));
-        this.it = this.simpleArrayList.iterator();
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(0));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(1));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(2));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(4));
-        assertThat(this.it.hasNext(), is(true));
-        assertThat(this.it.next(), is(5));
-        assertThat(this.it.hasNext(), is(false));
-        assertThat(this.simpleArrayList.get(0), is(0));
-        assertThat(this.simpleArrayList.get(1), is(1));
-        assertThat(this.simpleArrayList.get(2), is(2));
-        assertThat(this.simpleArrayList.get(3), is(4));
-        assertThat(this.simpleArrayList.get(4), is(5));
-    }
-
-    @Test
-    public void whenAddIntegerToContainerMoreThanContainerSizeThenContainerGrows() {
-        assertThat(this.simpleArrayList.getActualSize(), is(6));
-        this.simpleArrayList.add(6);
-        this.simpleArrayList.add(7);
-        this.simpleArrayList.add(8);
-        this.simpleArrayList.add(9);
-        this.simpleArrayList.add(10);
-        this.simpleArrayList.add(11);
-        this.it = this.simpleArrayList.iterator();
-        assertThat(this.simpleArrayList.getActualSize(), is(12));
+    public void whenAddValuesMoreThanContainerSizeThenContainerGrows() {
+        assertThat(this.intList.size(), is(5));
+        this.intList.add(5);
+        this.intList.add(6);
+        this.intList.add(7);
+        this.intList.add(8);
+        this.intList.add(9);
+        this.intList.add(10);
+        this.intList.add(11);
+        this.it = this.intList.iterator();
+        assertThat(this.intList.size(), is(12));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(0));
         assertThat(this.it.hasNext(), is(true));
@@ -174,7 +163,7 @@ public class SimpleArrayListTest {
         assertThat(this.it.next(), is(0));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(1));
-        this.simpleArrayList.add(6);
+        this.intList.add(6);
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(2));
     }
@@ -185,7 +174,7 @@ public class SimpleArrayListTest {
         assertThat(this.it.next(), is(0));
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(1));
-        this.simpleArrayList.remove(4);
+        this.intList.remove(4);
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(2));
     }
@@ -193,9 +182,17 @@ public class SimpleArrayListTest {
     @Test
     public void whenAdds150ElementsThenContainerGrowsFor150() {
         for (int i = 0; i < 150; i++) {
-            this.simpleArrayList.add(i);
+            this.intList.add(i);
         }
-        assertThat(this.simpleArrayList.getActualSize(), is(156));
-        assertThat(this.simpleArrayList.get(155), is(149));
+        assertThat(this.intList.size(), is(155));
+        assertThat(this.intList.get(154), is(149));
+    }
+
+    @Test
+    public void whenAddIntegerToSpecifiedPositionThenRearrangeList() {
+        this.intList.add(4, 10);
+        assertThat(this.intList.get(3), is(3));
+        assertThat(this.intList.get(4), is(10));
+        assertThat(this.intList.get(5), is(4));
     }
 }

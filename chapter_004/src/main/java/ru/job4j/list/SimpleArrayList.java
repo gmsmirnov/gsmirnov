@@ -1,5 +1,6 @@
 package ru.job4j.list;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
  * @version 1.0
  * @since 17/05/2018
  */
-public class SimpleArrayList<E> implements Iterable<E> {
+public class SimpleArrayList<E> implements BaseList<E> {
     /**
      * The elements of SimpleArray.
      */
@@ -54,6 +55,7 @@ public class SimpleArrayList<E> implements Iterable<E> {
      * @param value - the value to add.
      * @return - true if addition successful.
      */
+    @Override
     public boolean add(E value) {
         if (this.values.length == this.index) {
             this.grow();
@@ -64,12 +66,31 @@ public class SimpleArrayList<E> implements Iterable<E> {
     }
 
     /**
+     * Appends the specified element to the specified position of this array list.
+     *
+     * @param index - the specified position.
+     * @param value - the value to add.
+     */
+    @Override
+    public void add(int index, E value) {
+        this.rangeCheck(index);
+        if (this.values.length == this.index) {
+            this.grow();
+        }
+        this.modCount++;
+        System.arraycopy(this.values, index, this.values, index + 1, this.size() - index);
+        this.values[index] = value;
+        this.index++;
+    }
+
+    /**
      * Replaces the element at the specified position in this array list with the specified element.
      *
      * @param index - the specified position.
      * @param value - new element.
      * @return old element.
      */
+    @Override
     public E set(int index, E value) {
         this.rangeCheck(index);
         E oldValue = (E) this.values[index];
@@ -83,6 +104,7 @@ public class SimpleArrayList<E> implements Iterable<E> {
      * @param index - the specified position.
      * @return the element at the specified position.
      */
+    @Override
     public E get(int index) {
         this.rangeCheck(index);
         return (E) this.values[index];
@@ -94,6 +116,7 @@ public class SimpleArrayList<E> implements Iterable<E> {
      * @param index - the specified position
      * @return removed element.
      */
+    @Override
     public E remove(int index) {
         this.rangeCheck(index);
         this.modCount++;
@@ -104,6 +127,16 @@ public class SimpleArrayList<E> implements Iterable<E> {
         }
         this.values[--this.index] = null;
         return oldValue;
+    }
+
+    /**
+     * Gets actual size (without empty cells).
+     *
+     * @return - the actual size.
+     */
+    @Override
+    public int size() {
+        return this.index;
     }
 
     /**
@@ -127,15 +160,6 @@ public class SimpleArrayList<E> implements Iterable<E> {
         Object[] newValues = new Object[newCapacity];
         System.arraycopy(this.values, 0, newValues, 0, oldCapacity);
         this.values = newValues;
-    }
-
-    /**
-     * Gets actual size (without empty cells).
-     *
-     * @return - the actual size.
-     */
-    public int getActualSize() {
-        return this.index;
     }
 
     /**
