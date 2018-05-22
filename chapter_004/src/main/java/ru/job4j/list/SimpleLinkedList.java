@@ -123,7 +123,7 @@ public class SimpleLinkedList<E> implements BaseList<E> {
             result = result.next;
         }
         if (result == this.first) {
-            this.first = null;
+            this.first = result.next;
         }
         tmp.next = result.next;
         this.size--;
