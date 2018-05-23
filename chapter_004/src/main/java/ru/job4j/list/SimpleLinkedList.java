@@ -142,6 +142,47 @@ public class SimpleLinkedList<E> implements BaseList<E> {
     }
 
     /**
+     * Returns the index of the first occurrence of the specified element in this list, or -1 if this list does not contain the element.
+     *
+     * @param o - the specified element.
+     * @return index of the firs occurrence of specified element or -1.
+     */
+    @Override
+    public int indexOf(Object o) {
+        int result = -1;
+        int index = 0;
+        if (o == null) {
+            for (Node<E> pointer = this.first; pointer != null; pointer = pointer.next) {
+                if (pointer.data == null) {
+                    result = index;
+                    break;
+                }
+                index++;
+            }
+        } else {
+            for (Node<E> pointer = this.first; pointer != null; pointer = pointer.next) {
+                if (o.equals(pointer.data)) {
+                    result = index;
+                    break;
+                }
+                index++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns true if this list contains the specified element.
+     *
+     * @param o - the specified element.
+     * @return true if this list contains the specified element.
+     */
+    @Override
+    public boolean contains(Object o) {
+        return indexOf(o) != -1;
+    }
+
+    /**
      * Checks index location. If index locates out of linked list bounds, then method throws
      * IndexOutOfBoundsException.
      *

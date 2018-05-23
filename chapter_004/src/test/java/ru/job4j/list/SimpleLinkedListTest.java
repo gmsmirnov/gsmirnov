@@ -195,4 +195,24 @@ public class SimpleLinkedListTest {
         assertThat(this.intList.get(4), is(10));
         assertThat(this.intList.get(5), is(4));
     }
+
+    @Test
+    public void whenTheListContainsElementThenTrueElseFalse() {
+        assertThat(this.intList.contains(0), is(true));
+        assertThat(this.intList.contains(1), is(true));
+        assertThat(this.intList.contains(2), is(true));
+        assertThat(this.intList.contains(3), is(true));
+        assertThat(this.intList.contains(4), is(true));
+        assertThat(this.intList.contains(10), is(false));
+    }
+
+    @Test
+    public void whenTheListContainsElementThenCheckIndex() {
+        assertThat(this.intList.indexOf(0), is(0));
+        assertThat(this.intList.indexOf(1), is(1));
+        assertThat(this.intList.indexOf(2), is(2));
+        assertThat(this.intList.indexOf(3), is(3));
+        assertThat(this.intList.indexOf(4), is(4));
+        assertThat(this.intList.indexOf(5), is(-1));
+    }
 }

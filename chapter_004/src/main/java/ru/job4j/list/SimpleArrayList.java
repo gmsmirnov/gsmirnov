@@ -140,6 +140,42 @@ public class SimpleArrayList<E> implements BaseList<E> {
     }
 
     /**
+     * Returns the index of the first occurrence of the specified element in this list, or -1 if this list does not contain the element.
+     *
+     * @param o - the specified element.
+     * @return index of the firs occurrence of specified element or -1.
+     */
+    @Override
+    public int indexOf(Object o) {
+        int result = -1;
+        if (o == null) {
+            for (int index = 0; index < this.size(); index++) {
+                if (this.values[index] == null) {
+                    result = index;
+                }
+            }
+        } else {
+            for (int index = 0; index < this.size(); index++) {
+                if (o.equals(this.values[index])) {
+                    result = index;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns true if this list contains the specified element.
+     *
+     * @param o - the specified element.
+     * @return true if this list contains the specified element.
+     */
+    @Override
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    /**
      * Checks index location. If index locates out of array list bounds, then method throws
      * ArrayIndexOutOfBoundsException.
      *

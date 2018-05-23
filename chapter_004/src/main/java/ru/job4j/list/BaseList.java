@@ -55,4 +55,20 @@ public interface BaseList<E> extends Iterable<E> {
      * @return - the number of elements in this list.
      */
     int size();
+
+    /**
+     * Returns the index of the first occurrence of the specified element in this list, or -1 if this list does not contain the element.
+     *
+     * @param o - the specified element.
+     * @return index of the firs occurrence of specified element or -1.
+     */
+    int indexOf(Object o);
+
+    /**
+     * Returns true if this list contains the specified element.
+     *
+     * @param o - the specified element.
+     * @return true if this list contains the specified element.
+     */
+    boolean contains(Object o);
 }
