@@ -3,12 +3,13 @@ package ru.job4j.list;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
 
 /**
  * Simple linked list with generic type.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 18/05/2018
  */
 public class SimpleLinkedList<E> implements BaseList<E> {
@@ -230,11 +231,20 @@ public class SimpleLinkedList<E> implements BaseList<E> {
         public Node(E data) {
             this.data = data;
         }
+
+        /**
+         * Represents this node in string-view.
+         *
+         * @return - presentation in string-view.
+         */
+        @Override
+        public String toString() {
+            return String.format("Node{data=%s}", this.data);
+        }
     }
 
-
     /**
-     * Describes an iterator over the elements of SimpleLinkedList.
+     * Describes an iterator over the elements of SimpleLinkedListSet.
      *
      * @param <E> - Type of elements.
      * @author Gregory Smirnov (artress@ngs.ru)
@@ -296,5 +306,21 @@ public class SimpleLinkedList<E> implements BaseList<E> {
                 throw new ConcurrentModificationException("The Simple Linked List was changed its structure!");
             }
         }
+    }
+
+    /**
+     * Represents this collection in string-view.
+     *
+     * @return - presentation in string-view.
+     */
+    @Override
+    public String toString() {
+        StringJoiner str = new StringJoiner(" ");
+        Node pointer = first;
+        for (int index = 0; index < this.size; index++) {
+            str.add(pointer.data.toString());
+            pointer = pointer.next;
+        }
+        return str.toString();
     }
 }

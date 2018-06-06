@@ -215,4 +215,9 @@ public class SimpleLinkedListTest {
         assertThat(this.intList.indexOf(4), is(4));
         assertThat(this.intList.indexOf(5), is(-1));
     }
+
+    @Test
+    public void print() {
+        System.out.println(this.intList);
+    }
 }
