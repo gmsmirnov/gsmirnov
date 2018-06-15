@@ -98,4 +98,29 @@ public class SimpleHashSetTest {
         this.intStorage.clear();
         assertThat(this.intStorage.isEmpty(), is(true));
     }
+
+    @Test
+    public void negativeTest() {
+        this.intStorage.clear();
+        for (int i = 0; i > -1000; i--) {
+            this.intStorage.add(i * 2);
+        }
+        for (int i = 0; i > -1000; i--) {
+            this.intStorage.add(i * 3);
+        }
+        Iterator<Integer> iterInt = this.intStorage.iterator();
+        while (iterInt.hasNext()) {
+            System.out.println(iterInt.next());
+        }
+        System.out.println(this.intStorage.size());
+        System.out.println(this.intStorage.getLoad());
+        System.out.println(this.intStorage.getLength());
+        assertThat(this.intStorage.contains(-1998), is(true));
+        assertThat(this.intStorage.remove(-1998), is(true));
+        assertThat(this.intStorage.contains(-1998), is(false));
+        assertThat(this.intStorage.contains(-2550), is(true));
+        assertThat(this.intStorage.remove(-2550), is(true));
+        assertThat(this.intStorage.contains(-2550), is(false));
+        assertThat(this.intStorage.size(), is(1664));
+    }
 }

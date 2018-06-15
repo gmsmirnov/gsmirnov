@@ -7,6 +7,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
+/**
+ * Simple Hash Set with generic type. Supports resolution of collisions by Simple Linked List.
+ * Contains Iterator.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.1
+ * @since 27/05/2018
+ */
 public class SimpleHashSet<E> implements Iterable<E> {
     /**
      * The default size of simple set list.
@@ -76,16 +84,12 @@ public class SimpleHashSet<E> implements Iterable<E> {
      */
     private boolean deploy(E value, Object[] deposit) {
         boolean result = false;
-        int index = this.calcBucket(value);
+        int index = this.calcBucket(value, deposit.length);
         if (deposit[index] == null) {
             deposit[index] = new SimpleLinkedList<E>();
-            if (!((SimpleLinkedList<E>) deposit[index]).contains(value)) {
-                result = ((SimpleLinkedList<E>) deposit[index]).add(value);
-            }
-        } else {
-            if (!((SimpleLinkedList<E>) deposit[index]).contains(value)) {
-                result = ((SimpleLinkedList<E>) deposit[index]).add(value);
-            }
+        }
+        if (!((SimpleLinkedList<E>) deposit[index]).contains(value)) {
+            result = ((SimpleLinkedList<E>) deposit[index]).add(value);
         }
         return result;
     }
@@ -97,7 +101,7 @@ public class SimpleHashSet<E> implements Iterable<E> {
      * @return - true if this set contains the specified element.
      */
     public boolean contains(Object value) {
-        return ((SimpleLinkedList<E>) this.storage[this.calcBucket((E) value)]).contains((E) value);
+        return ((SimpleLinkedList<E>) this.storage[this.calcBucket((E) value, this.storage.length)]).contains((E) value);
     }
 
     /**
@@ -108,7 +112,7 @@ public class SimpleHashSet<E> implements Iterable<E> {
      */
     public boolean remove(Object value) {
         boolean result = false;
-        int index = this.calcBucket((E) value);
+        int index = this.calcBucket((E) value, this.storage.length);
         if (((SimpleLinkedList<E>) this.storage[index]).contains((E) value)) {
             ((SimpleLinkedList<E>) this.storage[index]).remove(((SimpleLinkedList<E>) this.storage[index]).indexOf(value));
             this.size--;
@@ -152,8 +156,9 @@ public class SimpleHashSet<E> implements Iterable<E> {
      * @param value - the specified value.
      * @return - the index of bucket.
      */
-    private int calcBucket(E value) {
-        return value.hashCode() % this.storage.length;
+    private int calcBucket(E value, int size) {
+        int key = value.hashCode() % size;
+        return (key >= 0) ? key : -key;
     }
 
     /**
