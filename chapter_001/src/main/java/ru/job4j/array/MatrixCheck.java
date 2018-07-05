@@ -25,13 +25,9 @@ public class MatrixCheck {
             for (int index = 0; index < data[0].length - 1; index++) {
                 if (data[index][index] != data[index + 1][index + 1]) {
                     diagonal1 = false;
-                    break;
                 }
-            }
-            for (int index = 0; index < data[0].length - 1; index++) {
                 if (data[data.length - index - 1][index] != data[data.length - index - 2][index + 1]) {
                     diagonal2 = false;
-                    break;
                 }
             }
             result = diagonal1 || diagonal2;
