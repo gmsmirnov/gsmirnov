@@ -50,7 +50,7 @@ public class MatrixCheckTest {
     public void whenDataMonoByTrueInEvenMatrixThenTrue() {
         MatrixCheck check = new MatrixCheck();
         boolean[][] input = new boolean[][] {
-                {true, true},
+                {true, false},
                 {false, true}
         };
         boolean result = check.mono(input);

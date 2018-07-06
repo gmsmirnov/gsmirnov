@@ -16,21 +16,20 @@ public class MatrixCheck {
      * @return true if one of diagonals contains only the same booleans.
      */
     public boolean mono(boolean[][] data) {
-        boolean result;
-        boolean diagonal1 = true;
-        boolean diagonal2 = true;
+        boolean result = true;
         if (!this.isMatrix(data)) {
             throw new IllegalArgumentException("The array isn't a square-array!");
         } else {
             for (int index = 0; index < data[0].length - 1; index++) {
                 if (data[index][index] != data[index + 1][index + 1]) {
-                    diagonal1 = false;
+                    result = false;
+                    break;
                 }
                 if (data[data.length - index - 1][index] != data[data.length - index - 2][index + 1]) {
-                    diagonal2 = false;
+                    result = false;
+                    break;
                 }
             }
-            result = diagonal1 || diagonal2;
         }
         return result;
     }
