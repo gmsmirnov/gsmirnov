@@ -10,13 +10,6 @@ import java.util.Iterator;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Simple set based on array list with generic type test.
- *
- * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
- * @since 23/05/2018
- */
 public class SimpleArrayListSetTest {
     private BaseList<Integer> intSet;
 

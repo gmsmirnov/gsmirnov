@@ -10,13 +10,6 @@ import java.util.Iterator;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Simple set based on linked list with generic type test.
- *
- * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
- * @since 23/05/2018
- */
 public class SimpleLinkedListSetTest {
     private BaseList<Integer> intSet;
 
@@ -64,5 +57,25 @@ public class SimpleLinkedListSetTest {
         this.intSet.add(6);
         assertThat(this.it.hasNext(), is(true));
         assertThat(this.it.next(), is(2));
+    }
+
+    @Test
+    public void whenTheListContainsElementThenTrue() {
+        assertThat(this.intSet.contains(0), is(true));
+        assertThat(this.intSet.contains(1), is(true));
+        assertThat(this.intSet.contains(2), is(true));
+        assertThat(this.intSet.contains(3), is(true));
+        assertThat(this.intSet.contains(4), is(true));
+        assertThat(this.intSet.contains(5), is(false));
+    }
+
+    @Test
+    public void whenTheListContainsElementThenCheckIndex() {
+        assertThat(this.intSet.indexOf(0), is(0));
+        assertThat(this.intSet.indexOf(1), is(1));
+        assertThat(this.intSet.indexOf(2), is(2));
+        assertThat(this.intSet.indexOf(3), is(3));
+        assertThat(this.intSet.indexOf(4), is(4));
+        assertThat(this.intSet.indexOf(5), is(-1));
     }
 }
