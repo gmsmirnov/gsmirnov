@@ -6,7 +6,7 @@ import java.util.*;
  * The realization of Simple Tree interface.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 15/06/2018
  */
 public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
@@ -85,6 +85,31 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
             }
             for (Node<E> child : element.leaves()) {
                 data.offer(child);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Checks if tree is binary (e.g. each node has <= 2 children).
+     *
+     * @return true if this tree is binary.
+     */
+    public boolean isBinary() {
+        boolean result = true;
+        int counter = 0;
+        Queue<Node<E>> queue = new LinkedList<Node<E>>();
+        queue.offer(this.root);
+        while (!queue.isEmpty()) {
+            Node<E> node = queue.poll();
+            counter = 0;
+            for (Node<E> child : node.leaves()) {
+                queue.offer(child);
+                counter++;
+            }
+            if (counter > 2) {
+                result = false;
+                break;
             }
         }
         return result;

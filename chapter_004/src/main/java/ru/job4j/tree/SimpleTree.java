@@ -11,18 +11,19 @@ import java.util.Optional;
  */
 public interface SimpleTree<E extends Comparable<E>> extends Iterable<E> {
     /**
-     * Adds element child to parent.
+     * Appends the specified child to the specified parent.
      *
-     * @param parent
-     * @param child
-     * @return
+     * @param parent the specified parent.
+     * @param child the specified child.
+     * @return true if successful.
      */
     boolean add(E parent, E child);
 
     /**
+     * Finds the node with the specified value.
      *
-     * @param value
-     * @return
+     * @param value - the specified value.
+     * @return the node with the specified value.
      */
     Optional<Node<E>> findBy(E value);
 }

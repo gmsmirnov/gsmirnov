@@ -9,7 +9,13 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-
+/**
+ * The Tree-test.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.1
+ * @since 09/07/2018
+ */
 public class TreeTest {
     @Test
     public void when6ElFindLastThen6() {
@@ -74,5 +80,31 @@ public class TreeTest {
         assertThat(iterator.next(), is(3));
         assertThat(tree.add(5, 6), is(true));
         assertThat(iterator.next(), is(4));
+    }
+
+    @Test
+    public void whenTreeIsBinaryThanTrue() {
+        Tree<Integer> binaryTree = new Tree<>(1);
+        assertThat(binaryTree.add(1, 2), is(true));
+        assertThat(binaryTree.add(1, 3), is(true));
+        assertThat(binaryTree.add(2, 4), is(true));
+        assertThat(binaryTree.add(2, 5), is(true));
+        assertThat(binaryTree.add(3, 6), is(true));
+        assertThat(binaryTree.add(3, 7), is(true));
+        assertThat(binaryTree.add(4, 8), is(true));
+        assertThat(binaryTree.add(8, 9), is(true));
+        assertThat(binaryTree.isBinary(), is(true));
+    }
+
+    @Test
+    public void whenTreeIsNotBinaryThanFalse() {
+        Tree<Integer> tree = new Tree<Integer>(1);
+        assertThat(tree.add(1, 2), is(true));
+        assertThat(tree.add(1, 3), is(true));
+        assertThat(tree.add(1, 4), is(true));
+        assertThat(tree.add(3, 5), is(true));
+        assertThat(tree.add(3, 6), is(true));
+        assertThat(tree.add(6, 7), is(true));
+        assertThat(tree.isBinary(), is(false));
     }
 }
