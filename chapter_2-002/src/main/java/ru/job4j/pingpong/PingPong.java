@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  * Simple JavaFX application with moving little rectangle. The little rectangle moves in it's own thread.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 20/07/2018
  */
 public class PingPong extends Application {
@@ -32,10 +32,14 @@ public class PingPong extends Application {
         Group group = new Group();
         Rectangle rect = new Rectangle(50, 100, 10, 10);
         group.getChildren().add(rect);
-        new Thread(new RectangleMove(rect)).start();
+        Thread movement = new Thread(new RectangleMove(rect));
+        movement.start();
         primaryStage.setScene(new Scene(group, limitX, limitY));
         primaryStage.setTitle(PingPong.JOB4J);
         primaryStage.setResizable(false);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> {
+            movement.interrupt();
+        });
     }
 }

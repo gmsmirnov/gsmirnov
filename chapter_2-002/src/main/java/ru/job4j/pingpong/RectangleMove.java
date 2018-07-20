@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
  * Little rectangle's movement.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 20/07/2018
  */
 public class RectangleMove implements Runnable {
@@ -42,7 +42,7 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                return;
             }
         }
     }
