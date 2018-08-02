@@ -22,4 +22,21 @@ public class TrieTest {
         assertThat(trie.getIndexes("dog").toArray(), arrayContainingInAnyOrder(expectedDog));
         assertThat(trie.getIndexes("monkey").toArray(), arrayContainingInAnyOrder(expectedMonkey));
     }
+
+    @Test
+    public void correctAskWordTest() {
+        Trie trie = new Trie();
+        trie.addWord("cat", 2);
+        trie.addWord("cat", 30);
+        trie.addWord("dog", 15);
+        System.out.println("cat: " + trie.getIndexes("cat"));
+        System.out.println("dog: " + trie.getIndexes("dog"));
+        System.out.println("dog&&&: " + trie.getIndexes("dog&&&"));
+        System.out.println("Dog: " + trie.getIndexes("Dog"));
+        System.out.println(": " + trie.getIndexes(""));
+        Integer[] expectedCat = {30, 2};
+        Integer[] expectedDog = {15};
+        assertThat(trie.getIndexes("cat").toArray(), arrayContainingInAnyOrder(expectedCat));
+        assertThat(trie.getIndexes("dog").toArray(), arrayContainingInAnyOrder(expectedDog));
+    }
 }
