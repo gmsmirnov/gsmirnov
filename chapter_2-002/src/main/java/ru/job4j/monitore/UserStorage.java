@@ -102,7 +102,7 @@ public class UserStorage {
      *
      * @return the quantity of users.
      */
-    public int size() {
+    public synchronized int size() {
         return this.storage.size();
     }
 
