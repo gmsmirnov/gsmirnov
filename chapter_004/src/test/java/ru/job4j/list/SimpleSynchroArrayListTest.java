@@ -3,6 +3,7 @@ package ru.job4j.list;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import static org.hamcrest.core.Is.is;
@@ -13,7 +14,7 @@ public class SimpleSynchroArrayListTest {
 
     private Thread t1;
 
-    private BaseList<Integer> list;
+    private SimpleSynchroArrayList<Integer> list;
 
     private Iterator<Integer> it;
 
@@ -86,5 +87,22 @@ public class SimpleSynchroArrayListTest {
             System.out.println(this.it.next());
         }
         assertThat(this.list.size(), is(155));
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void whenListChangedAfterIteratorCreationThanException() {
+        this.it = this.list.iterator();
+        this.t0.start();
+        this.t1.start();
+        try {
+            this.t0.join();
+            this.t1.join();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        while (this.it.hasNext()) {
+            System.out.println(this.it.next());
+        }
     }
 }
