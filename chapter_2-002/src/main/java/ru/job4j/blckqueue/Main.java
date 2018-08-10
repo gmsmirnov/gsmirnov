@@ -10,7 +10,7 @@ package ru.job4j.blckqueue;
 public class Main {
     public static void main(String[] args) {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<Integer>(10);
-        new Consumer(queue);
         new Producer(queue);
+        new Consumer(queue);
     }
 }
