@@ -4,20 +4,27 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Simple thread safe array list with generic type.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 17/05/2018
  */
 @ThreadSafe
 public class SimpleSynchroArrayList<E> {
+    private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock rLock = this.rwLock.readLock();
+    private final Lock wLock = this.rwLock.writeLock();
+
     /**
      * The container.
      */
-    @GuardedBy("this")
+    @GuardedBy("this.rwLock")
     private final SimpleArrayList<E> list;
 
     /**
@@ -42,8 +49,13 @@ public class SimpleSynchroArrayList<E> {
      * @param value - the value to add.
      * @return - true if addition successful.
      */
-    public synchronized boolean add(E value) {
-        return this.list.add(value);
+    public boolean add(E value) {
+        this.wLock.lock();
+        try {
+            return this.list.add(value);
+        } finally {
+          this.wLock.unlock();
+        }
     }
 
     /**
@@ -52,8 +64,13 @@ public class SimpleSynchroArrayList<E> {
      * @param index - the specified position.
      * @param value - the value to add.
      */
-    public synchronized void add(int index, E value) {
-        this.list.add(index, value);
+    public void add(int index, E value) {
+        this.wLock.lock();
+        try {
+            this.list.add(index, value);
+        } finally {
+            this.wLock.unlock();
+        }
     }
 
     /**
@@ -63,8 +80,13 @@ public class SimpleSynchroArrayList<E> {
      * @param value - new element.
      * @return old element.
      */
-    public synchronized E set(int index, E value) {
-        return this.list.set(index, value);
+    public E set(int index, E value) {
+        this.wLock.lock();
+        try {
+            return this.list.set(index, value);
+        } finally {
+            this.wLock.unlock();
+        }
     }
 
     /**
@@ -73,8 +95,13 @@ public class SimpleSynchroArrayList<E> {
      * @param index - the specified position.
      * @return the element at the specified position.
      */
-    public synchronized E get(int index) {
-        return this.get(index);
+    public E get(int index) {
+        this.rLock.lock();
+        try {
+            return this.list.get(index);
+        } finally {
+            this.rLock.unlock();
+        }
     }
 
     /**
@@ -83,8 +110,13 @@ public class SimpleSynchroArrayList<E> {
      * @param index - the specified position
      * @return removed element.
      */
-    public synchronized E remove(int index) {
-        return this.list.remove(index);
+    public E remove(int index) {
+        this.wLock.lock();
+        try {
+            return this.list.remove(index);
+        } finally {
+            this.wLock.unlock();
+        }
     }
 
     /**
@@ -92,8 +124,13 @@ public class SimpleSynchroArrayList<E> {
      *
      * @return - the actual size.
      */
-    public synchronized int size() {
-        return this.list.size();
+    public int size() {
+        this.rLock.lock();
+        try {
+            return this.list.size();
+        } finally {
+            this.rLock.unlock();
+        }
     }
 
     /**
@@ -102,8 +139,13 @@ public class SimpleSynchroArrayList<E> {
      * @param o - the specified element.
      * @return index of the firs occurrence of specified element or -1.
      */
-    public synchronized int indexOf(Object o) {
-        return this.indexOf(o);
+    public int indexOf(Object o) {
+        this.rLock.lock();
+        try {
+            return this.list.indexOf(o);
+        } finally {
+            this.rLock.unlock();
+        }
     }
 
     /**
@@ -112,16 +154,105 @@ public class SimpleSynchroArrayList<E> {
      * @param o - the specified element.
      * @return true if this list contains the specified element.
      */
-    public synchronized boolean contains(Object o) {
-        return this.list.contains(o);
+    public boolean contains(Object o) {
+        this.rLock.lock();
+        try {
+            return this.list.contains(o);
+        } finally {
+            this.rLock.unlock();
+        }
     }
 
     /**
-     * Returns an iterator over the elements in this array list in proper sequence.
+     * Returns an array containing all of the snapshot in this list in proper sequence (from first to last element).
+     *
+     * @return an array containing all of the snapshot in this list.
+     */
+    public Object[] toArray() {
+        this.rLock.lock();
+        try {
+            return this.list.toArray();
+        } finally {
+            this.rLock.unlock();
+        }
+    }
+
+    /**
+     * Represents the list in string view.
+     *
+     * @return the string view.
+     */
+    @Override
+    public String toString() {
+        this.rLock.lock();
+        try {
+            return String.format("SimpleSynchroArrayList{list=%s}", list);
+        } finally {
+            this.rLock.unlock();
+        }
+    }
+
+    /**
+     * Returns an iterator over the snapshot in this array list in proper sequence.
      *
      * @return iterator over Simple Array List.
      */
-    public synchronized Iterator<E> iterator() {
-        return this.list.iterator();
+    public Iterator<E> iterator() {
+        this.rLock.lock();
+        try {
+            return new SimpleSynchroArrayListIterator<E>();
+        } finally {
+            this.rLock.unlock();
+        }
+    }
+
+    /**
+     * Describes an iterator over the snapshot of elements of the list. The iterator is fail-safe.
+     *
+     * @param <E> - Type of elements.
+     */
+    private class SimpleSynchroArrayListIterator<E> implements Iterator<E> {
+        /**
+         * The snapshot of collection.
+         */
+        private final Object[] snapshot;
+
+        /**
+         * Current position
+         */
+        private int cursor;
+
+        /**
+         * The constructor.
+         */
+        public SimpleSynchroArrayListIterator() {
+            this.snapshot = SimpleSynchroArrayList.this.list.toArray();
+            this.cursor = 0;
+        }
+
+        /**
+         * Checks for next element.
+         *
+         * @return true if this snapshot contains next element.
+         */
+        @Override
+        public boolean hasNext() {
+            return this.cursor != this.snapshot.length && this.snapshot[cursor] != null;
+        }
+
+        /**
+         * Gets current element and moves pointer forward.
+         * If the array list contains no more elements, throws NoSuchElementException.
+         *
+         * @return current element.
+         */
+        @Override
+        public E next() {
+            E result = (E) this.snapshot[this.cursor++];
+            if (result == null) {
+                throw new NoSuchElementException("No more suitable snapshot!");
+            }
+            return result;
+        }
     }
 }

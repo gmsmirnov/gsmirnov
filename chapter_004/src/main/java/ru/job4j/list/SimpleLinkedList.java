@@ -191,7 +191,7 @@ public class SimpleLinkedList<E> implements BaseList<E> {
      */
     private void rangeCheck(int index) {
         if (index >= this.size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds!");
+            throw new IndexOutOfBoundsException("Index out of bounds! " + index);
         }
     }
 

@@ -1,9 +1,6 @@
 package ru.job4j.list;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Simple array list with generic type.
@@ -196,6 +193,22 @@ public class SimpleArrayList<E> implements BaseList<E> {
         Object[] newValues = new Object[newCapacity];
         System.arraycopy(this.values, 0, newValues, 0, oldCapacity);
         this.values = newValues;
+    }
+
+    /**
+     * Returns an array containing all of the elements in this list in proper sequence (from first to last element).
+     *
+     * @return an array containing all of the elements in this list.
+     */
+    public Object[] toArray() {
+        return Arrays.copyOf(this.values, this.index);
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleArrayList{" +
+                "values=" + Arrays.toString(values) +
+                '}';
     }
 
     /**
