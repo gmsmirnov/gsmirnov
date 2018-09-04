@@ -204,11 +204,16 @@ public class SimpleArrayList<E> implements BaseList<E> {
         return Arrays.copyOf(this.values, this.index);
     }
 
+    /**
+     * A string presentation of SimpleArrayList.
+     *
+     * @return the string presentation of this SimpleArrayList.
+     */
     @Override
     public String toString() {
-        return "SimpleArrayList{" +
-                "values=" + Arrays.toString(values) +
-                '}';
+        return "SimpleArrayList{"
+                + "values=" + Arrays.toString(values)
+                + '}';
     }
 
     /**
