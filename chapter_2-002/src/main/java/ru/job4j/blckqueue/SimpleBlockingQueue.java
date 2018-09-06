@@ -65,4 +65,13 @@ public class SimpleBlockingQueue<T> {
         this.notifyAll();
         return result;
     }
+
+    /**
+     * Checks the queue for emptiness.
+     *
+     * @return true if the queue is empty.
+     */
+    public synchronized boolean isEmpty() {
+        return this.queue.size() == 0;
+    }
 }
