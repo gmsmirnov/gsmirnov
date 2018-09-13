@@ -47,6 +47,16 @@ public class SimpleArrayList<E> implements BaseList<E> {
     }
 
     /**
+     * Creates a new Simple array list collection with elements from the specified array.
+     *
+     * @param array the input array.
+     */
+    public SimpleArrayList(E[] array) {
+        this.values = Arrays.copyOf(array, array.length);
+        this.index = this.values.length;
+    }
+
+    /**
      * Appends the specified element to the end of this array list.
      *
      * @param value - the value to add.
@@ -261,8 +271,10 @@ public class SimpleArrayList<E> implements BaseList<E> {
         @Override
         public E next() {
             this.modificationCheck();
-            E result = (E) values[position++];
-            if (result == null) {
+            E result;
+            if (this.position != SimpleArrayList.this.index) {
+                result = (E) values[position++];
+            } else {
                 throw new NoSuchElementException("No more suitable elements!");
             }
             return result;

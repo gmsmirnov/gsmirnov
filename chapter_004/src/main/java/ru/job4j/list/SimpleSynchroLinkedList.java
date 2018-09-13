@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Simple thread safe linked list with generic type.
+ * Simple thread safe linked list with generic type. It can produce non-mutable operations in parallel threads.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
  * @version 1.4
@@ -17,8 +17,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @ThreadSafe
 public class SimpleSynchroLinkedList<E> implements BaseList<E> {
+    /**
+     * The lock-object, which generates two locks: read-lock for non-mutable operations,
+     * write-lock for mutable operations. In one time uses only one write-lock or many read locks.
+     * Thereby non-mutable operations can be produced simultaneously.
+     */
     private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+
+    /**
+     * The lock for non-mutable operations.
+     */
     private final Lock rLock = this.rwLock.readLock();
+
+    /**
+     * The lock for mutable operations.
+     */
     private final Lock wLock = this.rwLock.writeLock();
 
     /**
@@ -27,6 +40,9 @@ public class SimpleSynchroLinkedList<E> implements BaseList<E> {
     @GuardedBy("this.rwLock")
     private final SimpleLinkedList<E> list;
 
+    /**
+     * Creates new list based on SimpleLinkedList.
+     */
     public SimpleSynchroLinkedList() {
         this.list = new SimpleLinkedList<E>();
     }
@@ -156,7 +172,32 @@ public class SimpleSynchroLinkedList<E> implements BaseList<E> {
     public Iterator<E> iterator() {
         this.rLock.lock();
         try {
-            return new SimpleSynchroLinkedListIterator();
+            return this.copy().iterator();
+        } finally {
+            this.rLock.unlock();
+        }
+    }
+
+    /**
+     * Weakly fair copy of this list. Uses for fail safe iterator.
+     *
+     * @return weakly fair copy of this list.
+     */
+    private SimpleLinkedList<E> copy() {
+        SimpleLinkedList<E> newList = new SimpleLinkedList<E>();
+        this.list.forEach(newList::add);
+        return newList;
+    }
+
+    /**
+     * Returns an array containing all of the snapshot in this list in proper sequence (from first to last element).
+     *
+     * @return an array containing all of the snapshot in this list.
+     */
+    public Object[] toArray() {
+        this.rLock.lock();
+        try {
+            return this.list.toArray();
         } finally {
             this.rLock.unlock();
         }
@@ -173,99 +214,6 @@ public class SimpleSynchroLinkedList<E> implements BaseList<E> {
             return this.list.toString();
         } finally {
             this.rLock.unlock();
-        }
-    }
-
-    /**
-     * Describes an iterator over the snapshot of elements of the list. The iterator is fail-safe.
-     *
-     * @param <E> - Type of elements.
-     */
-    private class SimpleSynchroLinkedListIterator<E> implements Iterator<E> {
-        /**
-         * The number of the first element.
-         */
-        private static final int FIRST = 0;
-
-        /**
-         * The head of the snapshot.
-         */
-        private Node<E> head;
-
-        /**
-         * Current position.
-         */
-        private int position = 0;
-
-        /**
-         * Creates new snapshot.
-         */
-        public SimpleSynchroLinkedListIterator() {
-            if (SimpleSynchroLinkedList.this.list.size() > 0) {
-                this.head = new Node(SimpleSynchroLinkedList.this.list.get(SimpleSynchroLinkedListIterator.FIRST));
-                Node<E> pointer = this.head;
-                for (int index = 1; index < SimpleSynchroLinkedList.this.list.size(); index++) {
-                    pointer.next = new Node(SimpleSynchroLinkedList.this.list.get(index));
-                    pointer = pointer.next;
-                }
-            }
-        }
-
-        /**
-         * Checks for next element.
-         *
-         * @return true if this snapshot contains next element.
-         */
-        @Override
-        public boolean hasNext() {
-            Node<E> pointer = this.head;
-            for (int index = 0; index < this.position; index++) {
-                pointer = pointer.next;
-            }
-            return pointer != null;
-        }
-
-        /**
-         * Gets current element and moves pointer forward.
-         * If the list contains no more elements, throws NoSuchElementException.
-         *
-         * @return current element.
-         */
-        @Override
-        public E next() {
-            Node<E> pointer = this.head;
-            for (int index = 0; index < this.position; index++) {
-                pointer = pointer.next;
-            }
-            if (pointer == null) {
-                throw new NoSuchElementException("No more elements!");
-            }
-            this.position++;
-            return pointer.data;
-        }
-    }
-
-    /**
-     * The snapshot node description.
-     *
-     * @param <E> - type of element
-     */
-    private static class Node<E> {
-        /**
-         * Data.
-         */
-        private E data;
-
-        /**
-         * Link to the next node.
-         */
-        private Node<E> next;
-
-        /**
-         * Creates new node.
-         */
-        public Node(E data) {
-            this.data = data;
         }
     }
 }

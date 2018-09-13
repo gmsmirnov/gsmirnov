@@ -4,21 +4,33 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Simple thread safe array list with generic type.
+ * Simple thread safe array list with generic type. It can produce non-mutable operations in parallel threads.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.3
+ * @version 1.4
  * @since 17/05/2018
  */
 @ThreadSafe
-public class SimpleSynchroArrayList<E> {
+public class SimpleSynchroArrayList<E> implements BaseList<E> {
+    /**
+     * The lock-object, which generates two locks: read-lock for non-mutable operations,
+     * write-lock for mutable operations. In one time uses only one write-lock or many read locks.
+     * Thereby non-mutable operations can be produced simultaneously.
+     */
     private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+
+    /**
+     * The lock for non-mutable operations.
+     */
     private final Lock rLock = this.rwLock.readLock();
+
+    /**
+     * The lock for mutable operations.
+     */
     private final Lock wLock = this.rwLock.writeLock();
 
     /**
@@ -200,59 +212,23 @@ public class SimpleSynchroArrayList<E> {
     public Iterator<E> iterator() {
         this.rLock.lock();
         try {
-            return new SimpleSynchroArrayListIterator<E>();
+            return copy().iterator();
         } finally {
             this.rLock.unlock();
         }
     }
 
     /**
-     * Describes an iterator over the snapshot of elements of the list. The iterator is fail-safe.
+     * Weakly fair copy of this list. Uses for fail safe iterator.
      *
-     * @param <E> - Type of elements.
+     * @return weakly fair copy of this list.
      */
-    private class SimpleSynchroArrayListIterator<E> implements Iterator<E> {
-        /**
-         * The snapshot of collection.
-         */
-        private final Object[] snapshot;
-
-        /**
-         * Current position
-         */
-        private int cursor;
-
-        /**
-         * The constructor.
-         */
-        public SimpleSynchroArrayListIterator() {
-            this.snapshot = SimpleSynchroArrayList.this.list.toArray();
-            this.cursor = 0;
-        }
-
-        /**
-         * Checks for next element.
-         *
-         * @return true if this snapshot contains next element.
-         */
-        @Override
-        public boolean hasNext() {
-            return this.cursor != this.snapshot.length && this.snapshot[cursor] != null;
-        }
-
-        /**
-         * Gets current element and moves pointer forward.
-         * If the array list contains no more elements, throws NoSuchElementException.
-         *
-         * @return current element.
-         */
-        @Override
-        public E next() {
-            E result = (E) this.snapshot[this.cursor++];
-            if (result == null) {
-                throw new NoSuchElementException("No more suitable snapshot!");
-            }
-            return result;
+    private SimpleArrayList<E> copy() {
+        this.rLock.lock();
+        try {
+            return new SimpleArrayList<E>((E[]) this.list.toArray());
+        } finally {
+            this.rLock.unlock();
         }
     }
 }

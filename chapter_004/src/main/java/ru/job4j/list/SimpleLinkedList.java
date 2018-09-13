@@ -1,9 +1,6 @@
 package ru.job4j.list;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * Simple linked list with generic type.
@@ -306,6 +303,20 @@ public class SimpleLinkedList<E> implements BaseList<E> {
                 throw new ConcurrentModificationException("The Simple Linked List was changed its structure!");
             }
         }
+    }
+
+    /**
+     * Returns an array containing all of the elements in this list in proper sequence (from first to last element).
+     *
+     * @return an array containing all of the elements in this list.
+     */
+    public Object[] toArray() {
+        Object[] array = new Object[this.size()];
+        Iterator<E> it = this.iterator();
+        for (int index = 0; index < this.size(); index++) {
+            array[index] = it.next();
+        }
+        return array;
     }
 
     /**
