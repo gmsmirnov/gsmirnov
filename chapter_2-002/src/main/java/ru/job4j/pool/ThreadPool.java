@@ -1,9 +1,8 @@
 package ru.job4j.pool;
 
+import ru.job4j.blckqueue.SimpleBlockingQueue;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The simple thread pool.
@@ -21,7 +20,7 @@ public class ThreadPool {
     /**
      * The task's queue.
      */
-    private final LinkedBlockingQueue<Runnable> tasks;
+    private final SimpleBlockingQueue<Runnable> tasks;
 
     /**
      * The pool's size.
@@ -32,17 +31,6 @@ public class ThreadPool {
      * The default task's queue size.
      */
     private final static int QUEUE_DEFAULT_SIZE = 10;
-
-    /**
-     * The counter for blocked tasks. Increments when the task's queue is full and thread pool tries to put into
-     * the queue new task.
-     */
-    private final AtomicInteger blockCounter;
-
-    /**
-     * The group for this thread pool threads.
-     */
-    private ThreadGroup group = new ThreadGroup("Thread Pool");
 
     /**
      * The default constructor. With size of thread pool defined by processor's cores and default task's queue size.
@@ -67,18 +55,16 @@ public class ThreadPool {
      * @param queueSize - the specified task's queue size.
      */
     public ThreadPool(int poolSize, int queueSize) {
-        this.blockCounter = new AtomicInteger(0);
         this.size = poolSize;
-        this.tasks = new LinkedBlockingQueue<Runnable>(queueSize);
+        this.tasks = new SimpleBlockingQueue<Runnable>(queueSize);
         for (int index = 0; index < this.size; index++) {
-            this.threads.add(new Thread(this.group, () -> {
-                while (true) {
+            this.threads.add(new Thread(() -> {
+                while (!this.tasks.isEmpty() || !Thread.currentThread().isInterrupted()) {
                     try {
-                        Runnable task = ThreadPool.this.tasks.take();
-                        task.run();
+                        ThreadPool.this.tasks.poll().run();
                     } catch (InterruptedException ie) {
                         ie.printStackTrace();
-                        break;
+                        Thread.currentThread().interrupt();
                     }
                 }
             }));
@@ -92,9 +78,10 @@ public class ThreadPool {
      * @param job - new task.
      */
     public void work(Runnable job) {
-        if (!this.tasks.offer(job)) {
-            System.out.println("The queue is full!");
-            this.blockCounter.getAndIncrement();
+        try {
+            this.tasks.offer(job);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -104,17 +91,6 @@ public class ThreadPool {
     public void shutdown() {
         for (int index = 0; index < this.size; index++) {
             this.threads.get(index).interrupt();
-            System.out.printf("Thread: %s was interrupted.%n", this.threads.get(index));
         }
-        Thread.currentThread().interrupt();
-    }
-
-    /**
-     * Gets the blocked counter.
-     *
-     * @return - the quantity of blocked tasks.
-     */
-    public AtomicInteger getBlockCounter() {
-        return this.blockCounter;
     }
 }

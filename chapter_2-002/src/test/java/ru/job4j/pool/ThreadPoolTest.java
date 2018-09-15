@@ -2,41 +2,42 @@ package ru.job4j.pool;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.core.Is.is;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 /**
  * The simple thread pool test.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 31/08/2018
  */
 public class ThreadPoolTest {
     private final ThreadPool pool = new ThreadPool();
 
-    @Test
-    public void whenQueueNotBlocked() throws InterruptedException {
-        for (int i = 0; i < 100; i++) {
-            this.pool.work(this.getTask("hello!"));
-            Thread.sleep(10);
-        }
-        Thread.sleep(1000);
-        assertThat(this.pool.getBlockCounter().get(), is(0));
-    }
+    private final List<Integer> input = new CopyOnWriteArrayList<Integer>();
+
+    private final List<Integer> output = new CopyOnWriteArrayList<Integer>();
+
+    private final List<Integer> expected = new CopyOnWriteArrayList<Integer>();
 
     @Test
-    public void whenQueueIsBlocked() throws InterruptedException {
-        for (int i = 0; i < 100; i++) {
-            this.pool.work(this.getTask("hello!"));
-            Thread.sleep(0);
+    public void whenNumberSquaringThenTrue() {
+        IntStream.range(0, 100).forEach(this.input::add);
+        for (Integer number : this.input) {
+            this.pool.work(this.getTask(number));
         }
-        Thread.sleep(1000);
-        assertThat(this.pool.getBlockCounter().get(), greaterThan(0));
+        for (Integer number : this.input) {
+            this.expected.add(number * number);
+        }
+        assertThat(this.output.toArray(), arrayContainingInAnyOrder(this.expected.toArray()));
     }
 
-    private Runnable getTask(String message) {
-        return () -> System.out.printf("Message: \'%s\' from thread: %s%n", message, Thread.currentThread());
+    private Runnable getTask(int number) {
+        return () -> this.output.add(number * number);
     }
 }
