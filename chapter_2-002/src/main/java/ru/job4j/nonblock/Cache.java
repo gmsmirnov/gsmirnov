@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The Base model's cache.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 10/08/2018
  */
 public class Cache {
@@ -30,7 +30,7 @@ public class Cache {
      *
      * @param model - new model.
      */
-    public synchronized void add(Base model) {
+    public void add(Base model) {
         this.cache.computeIfAbsent(model.getId(), v -> model);
     }
 
@@ -39,13 +39,14 @@ public class Cache {
      *
      * @param model - the model with specified id.
      */
-    public synchronized void update(Base model) throws OptimisticException {
+    public void update(Base model) throws OptimisticException {
         Base oldModel = this.getModel(model.getId());
         this.cache.computeIfPresent(model.getId(), (k, v) -> {
             if (model.getVersion() <= oldModel.getVersion()) {
                 throw new OptimisticException("Current version is equal or higher!");
             }
-            return v = model;
+            v = model;
+            return v;
         });
     }
 
@@ -54,7 +55,7 @@ public class Cache {
      *
      * @param model - the specified model.
      */
-    public synchronized void delete(Base model) {
+    public void delete(Base model) {
         this.cache.remove(model.getId());
     }
 

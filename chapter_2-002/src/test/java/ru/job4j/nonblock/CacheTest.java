@@ -11,6 +11,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * The cache test.
+ *
+ * @author Gregory Smirnov (artress@ngs.ru)
+ * @version 1.0
+ * @since 10/08/2018
+ */
 public class CacheTest {
     private Cache cache = new Cache();
 
@@ -45,8 +52,9 @@ public class CacheTest {
             Future<Base> futureResult = executor.submit(task);
             Base mod = futureResult.get();
         } catch (ExecutionException e) {
-            if (e.getMessage().contains("Current version is equal or higher!"))
-            ex.set(e);
+            if (e.getMessage().contains("Current version is equal or higher!")) {
+                ex.set(e);
+            }
         }
         assertThat(ex.get().getMessage(), is("ru.job4j.nonblock.OptimisticException: Current version is equal or higher!"));
     }
