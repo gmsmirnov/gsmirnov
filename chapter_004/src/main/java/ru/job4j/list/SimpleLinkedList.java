@@ -6,7 +6,7 @@ import java.util.*;
  * Simple linked list with generic type.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 18/05/2018
  */
 public class SimpleLinkedList<E> implements BaseList<E> {
@@ -137,6 +137,15 @@ public class SimpleLinkedList<E> implements BaseList<E> {
     @Override
     public int size() {
         return this.size;
+    }
+
+    /**
+     * Checks this list for emptiness.
+     *
+     * @return true if this list is empty.
+     */
+    public boolean isEmpty() {
+        return this.size == 0;
     }
 
     /**
