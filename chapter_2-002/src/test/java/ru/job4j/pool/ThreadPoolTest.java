@@ -34,6 +34,11 @@ public class ThreadPoolTest {
         for (Integer number : this.input) {
             this.expected.add(number * number);
         }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertThat(this.output.toArray(), arrayContainingInAnyOrder(this.expected.toArray()));
     }
 
