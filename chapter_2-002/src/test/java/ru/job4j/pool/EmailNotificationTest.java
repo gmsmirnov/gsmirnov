@@ -9,12 +9,13 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class EmailNotificationTest {
-    private final EmailNotification sender = new EmailNotification();
+    private final Result results = new Result();
+    private final EmailNotification sender = new EmailNotification(this.results);
 
     @Test
     public void whenCreatesSingleMessageThanTrue() throws ExecutionException, InterruptedException {
         this.sender.emailTo(new User("Alex", "alex@mail.ru"));
-        Boolean result = this.sender.getResults().get(0).get();
+        Boolean result = this.results.getResults().get(0).get();
         assertThat(result, is(true));
         this.sender.close();
     }
@@ -25,9 +26,10 @@ public class EmailNotificationTest {
         LinkedList<Boolean> expected = new LinkedList<Boolean>();
         for (int i = 0; i < 100; i++) {
             this.sender.emailTo(new User("User " + i, "user" + i + "@mail.ru"));
-            results.add(this.sender.getResults().get(i).get());
+            results.add(this.results.getResults().get(0).get());
             expected.add(true);
         }
+        Thread.sleep(1000);
         assertThat(results, is(expected));
         this.sender.close();
     }

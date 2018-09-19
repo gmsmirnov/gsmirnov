@@ -1,15 +1,13 @@
 package ru.job4j.pool;
 
-import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * A e-mail notification. A service for e-mail delivery.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 01/09/2018
  */
 public class EmailNotification {
@@ -21,24 +19,16 @@ public class EmailNotification {
     /**
      * The task's results.
      */
-    private LinkedList<Future<Boolean>> results;
+    private final Result result;
 
-    /**
-     * Gets task's results.
-     *
-     * @return the list of results.
-     */
-    public LinkedList<Future<Boolean>> getResults() {
-        return results;
-    }
 
     /**
      * Creates a e-mail delivery service with a thread pool inside. This thread pool contains threads in quantity of
      * available processors.
      */
-    public EmailNotification() {
+    public EmailNotification(Result result) {
+        this.result = result;
         this.pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        this.results = new LinkedList<Future<Boolean>>();
     }
 
     /**
@@ -47,7 +37,7 @@ public class EmailNotification {
      * @param user the specified user.
      */
     public void emailTo(User user) {
-        this.results.add(this.pool.submit(() -> {
+        this.result.add(this.pool.submit(() -> {
             EmailNotification.this.send(String.format("Notification {%s} to email {%s}%n", user.getUserName(), user.geteMail()),
                     String.format("Add new event to {%s}%n", user.getUserName()), user.geteMail());
             return true;
