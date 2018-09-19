@@ -26,7 +26,7 @@ public class EmailNotificationTest {
         LinkedList<Boolean> expected = new LinkedList<Boolean>();
         for (int i = 0; i < 100; i++) {
             this.sender.emailTo(new User("User " + i, "user" + i + "@mail.ru"));
-            results.add(this.results.getResults().get(0).get());
+            results.add(this.results.getResults().get(i).get());
             expected.add(true);
         }
         Thread.sleep(1000);
