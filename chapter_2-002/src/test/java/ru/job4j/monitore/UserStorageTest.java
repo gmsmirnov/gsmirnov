@@ -15,8 +15,8 @@ public class UserStorageTest {
 
     @Before
     public void init() {
-        this.capacity = 10;
-        this.amount = 100;
+        this.capacity = 100;
+        this.amount = 1000;
         this.transactions = 1_000;
         this.storage = new UserStorage(capacity);
         for (int i = 0; i < this.capacity; i++) {
