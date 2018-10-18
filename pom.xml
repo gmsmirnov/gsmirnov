@@ -18,6 +18,8 @@
         <module>chapter_002</module>
         <module>chapter_003</module>
         <module>chapter_004</module>
+		<module>chapter_2-002</module>
+		<module>chapter_2-003</module>
     </modules>
 	 
 	<dependencies>
@@ -42,6 +44,11 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.jcip</groupId>
+			<artifactId>jcip-annotations</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	
