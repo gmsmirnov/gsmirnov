@@ -8,23 +8,23 @@ import java.util.concurrent.locks.ReentrantLock;
  * Each busy cell us locked and every available cells are unlocked.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 09/10/2018
  */
 public final class Board {
     /**
      * The game board.
      */
-    private static ReentrantLock[][] board;
+    private final ReentrantLock[][] board;
 
     /**
-     * Initialize the game board.
+     * Creates the game board and initialize it.
      */
-    public static void init() {
-        Board.board = new ReentrantLock[Constants.BOARD_LENGTH][Constants.BOARD_WIDTH];
-        for (int xCoord = 0; xCoord < Constants.BOARD_LENGTH; xCoord++) {
-            for (int yCoord = 0; yCoord < Constants.BOARD_WIDTH; yCoord++) {
-                Board.board[xCoord][yCoord] = new ReentrantLock();
+    public Board(int height, int width) {
+        this.board = new ReentrantLock[height][width];
+        for (int xCoord = 0; xCoord < height; xCoord++) {
+            for (int yCoord = 0; yCoord < width; yCoord++) {
+                this.board[xCoord][yCoord] = new ReentrantLock();
             }
         }
     }
@@ -34,8 +34,8 @@ public final class Board {
      *
      * @param hero - the specified character (bomberman or monster).
      */
-    public static void locate(Hero hero) {
-        Board.board[hero.getX()][hero.getY()].lock();
+    public void locate(Hero hero) {
+        this.board[hero.getX()][hero.getY()].lock();
         System.out.println(Thread.currentThread().getName() + " located:[" + hero.getX() + "][" + hero.getY() + "]");
     }
 
@@ -46,7 +46,7 @@ public final class Board {
      * @param yDest - y coordinate.
      * @return true if the specified coordinate located within this game board.
      */
-    public static boolean checkLimits(int xDest, int yDest) {
+    public boolean checkLimits(int xDest, int yDest) {
         return xDest >= 0 && xDest < Constants.BOARD_LENGTH && yDest >= 0 && yDest < Constants.BOARD_WIDTH;
     }
 
@@ -55,21 +55,42 @@ public final class Board {
      *
      * @return true if move was successful.
      */
-    public static boolean move(int xSource, int ySource, int xDest, int yDest) {
+    public boolean move(int xSource, int ySource, int xDest, int yDest) {
         boolean result = false;
         try {
-            if (Board.board[xDest][yDest].tryLock(Constants.TRY_LOCK_TIMEOUT, TimeUnit.MILLISECONDS)) {
+            if (this.board[xDest][yDest].tryLock(Constants.TRY_LOCK_TIMEOUT, TimeUnit.MILLISECONDS)) {
                 System.out.println(Thread.currentThread().getName() + " Board destination:[" + xDest + "][" + yDest + "] locked successfully.");
                 result = true;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            if (Board.board[xSource][ySource].isHeldByCurrentThread()) {
-                Board.board[xSource][ySource].unlock();
+            if (this.board[xSource][ySource].isHeldByCurrentThread()) {
+                this.board[xSource][ySource].unlock();
                 System.out.println(Thread.currentThread().getName() + " Board source:[" + xSource + "][" + ySource + "] unlocked successfully.");
             }
         }
         return result;
+    }
+
+    /**
+     * Checks the specified cell. Is it available or not.
+     *
+     * @param xCoord - the x coordinate.
+     * @param yCoord - the y coordinate.
+     * @return - tru if the specified cell is available.
+     */
+    public boolean isAvailable(int xCoord, int yCoord) {
+        return !this.board[xCoord][yCoord].isLocked();
+    }
+
+    /**
+     * Clears the specified cell (unlock it).
+     *
+     * @param xCoord - the x coordinate.
+     * @param yCoord - the y coordinate.
+     */
+    public void clear(int xCoord, int yCoord) {
+        this.board[xCoord][yCoord].unlock();
     }
 }

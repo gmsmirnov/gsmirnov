@@ -4,23 +4,37 @@ package ru.job4j.bomberman;
  * The character's action. Creates a new thread in which this character moves.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 09/10/2018
  */
 public final class HeroAction implements Runnable {
     /**
-     * Character's actions.
+     * The board on which located hero.
+     */
+    private final Board board;
+
+    /**
+     * Binds the board for hero movement.
+     *
+     * @param board - the specified board.
+     */
+    public HeroAction(Board board) {
+        this.board = board;
+    }
+
+    /**
+     * Character's actions. Character moves on the specified board.
      */
     @Override
     public void run() {
         Hero hero = new Hero((int) (Math.random() * Constants.BOARD_LENGTH), (int) (Math.random() * Constants.BOARD_WIDTH));
-        Board.locate(hero);
-        while (!Thread.interrupted()) {
+        this.board.locate(hero);
+        while (!Thread.currentThread().isInterrupted()) {
             Step step = new Step();
-            while (!Board.checkLimits(hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY())) {
+            while (!this.board.checkLimits(hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY())) {
                 step = new Step();
             }
-            Board.move(hero.getX(), hero.getY(), hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY());
+            this.board.move(hero.getX(), hero.getY(), hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY());
             hero = new Hero(hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY());
             try {
                 Thread.sleep(Constants.TURN_TIMEOUT);
@@ -29,5 +43,6 @@ public final class HeroAction implements Runnable {
                 Thread.currentThread().interrupt();
             }
         }
+        this.board.clear(hero.getX(), hero.getY());
     }
 }
