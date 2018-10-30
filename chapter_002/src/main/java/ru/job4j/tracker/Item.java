@@ -275,4 +275,18 @@ public class Item {
     public int hashCode() {
         return Objects.hash(this.name, this.desc);
     }
+
+    @Override
+    public String toString() {
+        return "Item{"
+                + "author='" + author + '\''
+                + ", id='" + id + '\''
+                + ", name='" + name + '\''
+                + ", desc='" + desc + '\''
+                + ", creation=" + creation
+                + ", comments=" + comments
+                + ", state='" + state + '\''
+                + ", category='" + category + '\''
+                + '}';
+    }
 }
