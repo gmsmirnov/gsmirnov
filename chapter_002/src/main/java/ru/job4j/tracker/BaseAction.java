@@ -7,7 +7,7 @@ import java.util.Date;
  * Basic abstract class for user actions.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 27/02/2018
  */
 public abstract class BaseAction implements UserAction {
@@ -39,7 +39,7 @@ public abstract class BaseAction implements UserAction {
      * @param output - the output interface for feedback to user.
      * @param tracker - requests container.
      */
-    public abstract void execute(Input input, Output output, Tracker tracker);
+    public abstract void execute(Input input, Output output, ITracker tracker);
 
     /**
      * Define the unique key for each user action.

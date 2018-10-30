@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * The entry point. Provides the work of application. Main cycle.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.5
+ * @version 1.6
  * @since 10/02/2018
  */
 public class StartUI {
@@ -27,7 +27,7 @@ public class StartUI {
     /**
      * Requests database.
      */
-    private final Tracker tracker;
+    private final ITracker tracker;
 
     /**
      * The application termination flag.
@@ -46,12 +46,15 @@ public class StartUI {
      * @param output - the output interface for feedback to user.
      * @param tracker - requests container.
      */
-    public StartUI(Input input, Output output, Tracker tracker) {
+    public StartUI(Input input, Output output, ITracker tracker) {
         this.input = input;
         this.output = output;
         this.tracker = tracker;
     }
 
+    /**
+     * Sets the "exit" flag.
+     */
     public void stop() {
         this.exit = true;
     }

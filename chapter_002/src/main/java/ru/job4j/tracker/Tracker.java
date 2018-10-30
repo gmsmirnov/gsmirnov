@@ -8,15 +8,14 @@ import java.util.UUID;
  * Class Tracker - class wrapper, that manage requests.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.3
+ * @version 1.4
  * @since 07/02/2018
  */
-public class Tracker {
+public class Tracker implements ITracker {
     /**
      * Container for requests.
      */
     private final ArrayList<Item> items = new ArrayList<Item>();
-
 
     /**
      * Addition request to container.

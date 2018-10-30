@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * MenuTracker class. The applications menu.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.5
+ * @version 1.6
  * @since 20/02/2018
  */
 public class MenuTracker {
@@ -23,7 +23,7 @@ public class MenuTracker {
     /**
      * The instance of Tracker.
      */
-    private final Tracker tracker;
+    private final ITracker tracker;
 
     /**
      * The array of menu items.
@@ -38,7 +38,7 @@ public class MenuTracker {
      * @param output - the instance of Output interface.
      * @param tracker - the instance of Tracker.
      */
-    public MenuTracker(Input input, Output output, Tracker tracker) {
+    public MenuTracker(Input input, Output output, ITracker tracker) {
         this.input = input;
         this.output = output;
         this.tracker = tracker;
@@ -114,7 +114,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("========Adding a new request==========");
             String name = input.ask("Please enter the name of your request: ");
             String desc = input.ask("Please enter the description of your request: ");
@@ -149,7 +149,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("========Showing all requests==========");
             ArrayList<Item> items = tracker.findAll();
             String message = "There is no any requests.";
@@ -187,7 +187,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("=========Editing the request==========");
             String id = input.ask("Please enter the id of your request: ");
             String name = input.ask("Please enter the name of your request: ");
@@ -226,7 +226,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("========Deleting the request==========");
             if (tracker.delete(input.ask("Please enter the id of your request: "))) {
                 output.print("Your request was successfully deleted.");
@@ -262,7 +262,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("=======Finding the request by id======");
             String message = "Incorrect id, request not found.";
             Item item = tracker.findById(input.ask("Please enter the id of your request: "));
@@ -299,7 +299,7 @@ public class MenuTracker {
          * @param tracker - requests container.
          */
         @Override
-        public void execute(Input input, Output output, Tracker tracker) {
+        public void execute(Input input, Output output, ITracker tracker) {
             output.print("=====Finding the requests by name=====");
             String message = "There is no requests with this name.";
             ArrayList<Item> items = tracker.findByName(input.ask("Please enter the name of your request: "));
@@ -316,7 +316,7 @@ public class MenuTracker {
  * Application termination. Outer class in the same file.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 20/02/2018
  */
 class Exit extends BaseAction {
@@ -345,7 +345,7 @@ class Exit extends BaseAction {
      * @param tracker - requests container.
      */
     @Override
-    public void execute(Input input, Output output, Tracker tracker) {
+    public void execute(Input input, Output output, ITracker tracker) {
         output.print("=======Application termination!=======");
         this.ui.stop();
     }
