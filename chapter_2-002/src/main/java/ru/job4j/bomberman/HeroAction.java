@@ -4,7 +4,7 @@ package ru.job4j.bomberman;
  * The character's action. Creates a new thread in which this character moves.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 09/10/2018
  */
 public final class HeroAction implements Runnable {
@@ -27,8 +27,14 @@ public final class HeroAction implements Runnable {
      */
     @Override
     public void run() {
-        Hero hero = new Hero((int) (Math.random() * Constants.BOARD_LENGTH), (int) (Math.random() * Constants.BOARD_WIDTH));
-        this.board.locate(hero);
+        Hero hero = new Hero((int) (Math.random() * Constants.BOARD_HEIGHT), (int) (Math.random() * Constants.BOARD_WIDTH));
+        while (!this.board.locateHero(hero)) {
+            try {
+                Thread.sleep(Constants.LOCATION_TIMEOUT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         while (!Thread.currentThread().isInterrupted()) {
             Step step = new Step();
             while (!this.board.checkLimits(hero.getX() + step.getDeltaX(), hero.getY() + step.getDeltaY())) {
