@@ -6,7 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -18,7 +22,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
  * The test class for TrackerSQL.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 18/10/2018
  */
 public class TrackerSQLTest {
@@ -106,13 +110,40 @@ public class TrackerSQLTest {
     }
 
     private void initializeDBWithScript() {
-        String aSQLScriptFilePath = ".\\src\\main\\resources\\insert.sql";
+        Connection connection;
         try {
-            ScriptRunner scriptRunner = new ScriptRunner(sql.getConnection(), false, false);
+            InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties");
+            Properties config = new Properties();
+            config.load(in);
+            Class.forName(config.getProperty("driver-class-name"));
+            connection = DriverManager.getConnection(
+                    config.getProperty("url"),
+                    config.getProperty("username"),
+                    config.getProperty("password")
+            );
+            this.testLog.info("Connected to initialize database.");
+        } catch (Exception e) {
+            this.testLog.error(e.getMessage(), e);
+            throw new IllegalStateException(e);
+        }
+
+        String aSQLScriptFilePath = "insert.sql";
+        try {
+            ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
             Reader reader = new BufferedReader(new FileReader(aSQLScriptFilePath));
             scriptRunner.runScript(reader);
         } catch (Exception e) {
             this.testLog.error(e.getMessage(), e);
         }
+
+        if (connection != null) {
+            try {
+                connection.close();
+                this.testLog.info("Closing connection.");
+            } catch (SQLException e) {
+                this.testLog.error(e.getMessage(), e);
+            }
+        }
+        this.testLog.info("Initialize connection closed.");
     }
 }

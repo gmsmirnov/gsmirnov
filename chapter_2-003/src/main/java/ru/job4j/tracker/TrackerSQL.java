@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
  * Class TrackerSQL - class wrapper, that manage requests. Requests stored in PostgreSQL database.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 18/10/2018
  */
 public class TrackerSQL implements ITracker, Closeable {
@@ -25,15 +25,6 @@ public class TrackerSQL implements ITracker, Closeable {
      * The connection to PostgreSQL database.
      */
     private final Connection connection;
-
-    /**
-     * Gets the connection to database. Needs for executing aql scripts.
-     *
-     * @return this connection to database.
-     */
-    public Connection getConnection() {
-        return this.connection;
-    }
 
     /**
      * The constructor which creates and initialises the connection to PostgreSQL database.
@@ -89,7 +80,7 @@ public class TrackerSQL implements ITracker, Closeable {
      * Creates tables structure if it not exists.
      */
     private void createStructure() {
-        String aSQLScriptFilePath = ".\\src\\main\\resources\\createTables.sql";
+        String aSQLScriptFilePath = "createTables.sql";
         try {
             ScriptRunner scriptRunner = new ScriptRunner(this.connection, false, false);
             Reader reader = new BufferedReader(new FileReader(aSQLScriptFilePath));
