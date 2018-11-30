@@ -1,8 +1,17 @@
 delete from items;
-delete from states;
 delete from categories;
-delete from roles;
+delete from states;
+delete from roles_rules;
+delete from rules;
 delete from users;
+delete from roles;
+
+insert into roles(name) values('admin');
+insert into roles(name) values('user');
+
+insert into users(name, password, role) values('gsmirnov', '123', '1');
+insert into users(name, password, role) values('akaleganov', '123', '2');
+insert into users(name, password, role) values('guest', '123', '2');
 
 insert into states(state) values('accepted');
 insert into states(state) values('analyze');
@@ -14,13 +23,6 @@ insert into categories(category) values('normal');
 insert into categories(category) values('urgent');
 insert into categories(category) values('critical');
 insert into categories(category) values('default');
-
-insert into roles(name) values('admin');
-insert into roles(name) values('user');
-
-insert into users(name, password, role) values('gsmirnov', '123', '1');
-insert into users(name, password, role) values('akaleganov', '123', '2');
-insert into users(name, password, role) values('guest', '123', '2');
 
 insert into items(author, title, description, creation_date, state, category)
 values('1', 'test', 'test description', '2018-10-20 00:00:00','1', '1');
