@@ -34,7 +34,7 @@ insert into items(author, title, description, creation_date, state, category)
 values('3', 'test3', 'test description 3', '2018-10-22 00:00:00','1', '3');
 
 insert into items(author, title, description, creation_date, state, category)
-values('1', 'request1', 'request description 1', '2018-10-28 00:00:00','5', '5');
+values('1', 'request1', 'request description 1', '2018-10-28 00:00:00','5', '4');
 
 insert into items(author, title, description, creation_date, state, category)
-values('4', 'request', 'request description', '2018-10-27 00:00:00','5', '5');
+values('4', 'request', 'request description', '2018-10-27 00:00:00','5', '4');
