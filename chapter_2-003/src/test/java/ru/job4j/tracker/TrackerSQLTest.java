@@ -127,13 +127,15 @@ public class TrackerSQLTest {
             throw new IllegalStateException(e);
         }
 
-        String aSQLScriptFilePath = "insert.sql";
-        try {
-            ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
-            Reader reader = new BufferedReader(new FileReader(aSQLScriptFilePath));
-            scriptRunner.runScript(reader);
-        } catch (Exception e) {
-            this.testLog.error(e.getMessage(), e);
+        String[] aSQLScriptFilePath = {"insert0.sql", "insert1.sql", "insert2.sql", "insert3.sql"};
+        for (String script : aSQLScriptFilePath) {
+            try {
+                ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
+                Reader reader = new BufferedReader(new FileReader(script));
+                scriptRunner.runScript(reader);
+            } catch (Exception e) {
+                this.testLog.error(e.getMessage(), e);
+            }
         }
 
         if (connection != null) {
