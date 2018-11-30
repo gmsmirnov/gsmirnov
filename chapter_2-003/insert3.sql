@@ -11,4 +11,4 @@ insert into items(author, title, description, creation_date, state, category)
 values('1', 'request1', 'request description 1', '2018-10-28 00:00:00','5', '4');
 
 insert into items(author, title, description, creation_date, state, category)
-values('4', 'request', 'request description', '2018-10-27 00:00:00','5', '4');
+values('3', 'request', 'request description', '2018-10-27 00:00:00','5', '4');
