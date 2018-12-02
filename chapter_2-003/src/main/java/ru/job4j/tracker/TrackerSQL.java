@@ -1,18 +1,18 @@
 package ru.job4j.tracker;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import com.ibatis.common.jdbc.ScriptRunner;
-import org.apache.log4j.Logger;
-
 /**
  * Class TrackerSQL - class wrapper, that manage requests. Requests stored in PostgreSQL database.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 18/10/2018
  */
 public class TrackerSQL implements ITracker, Closeable {
@@ -375,6 +375,254 @@ public class TrackerSQL implements ITracker, Closeable {
         return result;
     }
 
+    /**
+     * Finds the id of user's role in 'roles' table.
+     *
+     * @param user - the specified user.
+     * @return role's id as int.
+     */
+    private int selectRoleId(User user) {
+        int result = Constants.WRONG_ID_INT;
+        try (PreparedStatement statement = this.connection.prepareStatement("select id from roles where name = ?")) {
+            statement.setString(1, user.getRole());
+            try (ResultSet rslSet = statement.executeQuery()) {
+                if (rslSet.next()) {
+                    result = rslSet.getInt(Constants.ID_LABEL);
+                    this.sqlLog.info(String.format("Got role's id: %d category: %s", result, user.getRole()));
+                }
+            }
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    /**
+     * Adds new role to database.
+     *
+     * @param role - the name of a new role.
+     * @return the id of a new role int roles table.
+     */
+    public int addRole(String role) {
+        String id = Constants.WRONG_ID_STRING;
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "insert into roles(name) values(?);",
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, role);
+            statement.executeUpdate();
+            try (ResultSet rslSet = statement.getGeneratedKeys()) {
+                if (rslSet.next()) {
+                    id = Integer.toString(rslSet.getInt(Constants.ID_LABEL));
+                    this.sqlLog.info(String.format("An item added to database successful, a role's id is %s.", id));
+                }
+            }
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        if (id.equals(Constants.WRONG_ID_STRING)) {
+            this.sqlLog.error("Something going wrong, the id is '-1'.");
+        }
+        return Integer.parseInt(id);
+    }
+
+    /**
+     * Adds new state to database.
+     *
+     * @param state - the name of a new state.
+     * @return the id of a new state in states table.
+     */
+    public int addState(String state) {
+        String id = Constants.WRONG_ID_STRING;
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "insert into states(state) values(?);",
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, state);
+            statement.executeUpdate();
+            try (ResultSet rslSet = statement.getGeneratedKeys()) {
+                if (rslSet.next()) {
+                    id = Integer.toString(rslSet.getInt(Constants.ID_LABEL));
+                    this.sqlLog.info(String.format("An item added to database successful, a state's id is %s.", id));
+                }
+            }
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        if (id.equals(Constants.WRONG_ID_STRING)) {
+            this.sqlLog.error("Something going wrong, the id is '-1'.");
+        }
+        return Integer.parseInt(id);
+    }
+
+    /**
+     * Adds new category to database.
+     *
+     * @param category - the name of a new category.
+     * @return the id of a new category in categories table.
+     */
+    public int addCategory(String category) {
+        String id = Constants.WRONG_ID_STRING;
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "insert into categories(category) values(?);",
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, category);
+            statement.executeUpdate();
+            try (ResultSet rslSet = statement.getGeneratedKeys()) {
+                if (rslSet.next()) {
+                    id = Integer.toString(rslSet.getInt(Constants.ID_LABEL));
+                    this.sqlLog.info(String.format("An item added to database successful, a category's id is %s.", id));
+                }
+            }
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        if (id.equals(Constants.WRONG_ID_STRING)) {
+            this.sqlLog.error("Something going wrong, the id is '-1'.");
+        }
+        return Integer.parseInt(id);
+    }
+
+    /**
+     * Adds new user to database.
+     *
+     * @param user - the specified user.
+     * @return the new user's id in user's table.
+     */
+    public int addUser(User user) {
+        String id = Constants.WRONG_ID_STRING;
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "insert into users(name, password, role) values(?, ?, ?);",
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getPassword());
+            statement.setInt(3, this.selectRoleId(user));
+            statement.executeUpdate();
+            try (ResultSet rslSet = statement.getGeneratedKeys()) {
+                if (rslSet.next()) {
+                    id = Integer.toString(rslSet.getInt(Constants.ID_LABEL));
+                    this.sqlLog.info(String.format("An item added to database successful, an user's id is %s.", id));
+                }
+            }
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        if (id.equals(Constants.WRONG_ID_STRING)) {
+            this.sqlLog.error("Something going wrong, the id is '-1'.");
+        }
+        return Integer.parseInt(id);
+    }
+
+    /**
+     * Clears database, empties all tables.
+     *
+     * @return true if successful.
+     */
+    public boolean emptyDataBase() {
+        boolean result = false;
+        try {
+            this.emptyItems();
+            this.emptyCategories();
+            this.emptyStates();
+            this.emptyRolesRules();
+            this.emptyRules();
+            this.emptyUsers();
+            this.emptyRoles();
+            result = true;
+        } catch (SQLException e) {
+            this.sqlLog.error(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    /**
+     * Empties items table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyItems() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from items;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Items\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties categories table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyCategories() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from categories;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Categories\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties states table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyStates() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from states;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'States\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties roles-rules table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyRolesRules() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from roles_rules;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Roles-Rules\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties rules table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyRules() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from rules;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Rules\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties users table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyUsers() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from users;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Users\' was cleared."));
+        }
+    }
+
+    /**
+     * Empties roles table.
+     *
+     * @throws SQLException if executeUpdate throws it.
+     */
+    private void emptyRoles() throws SQLException {
+        try (PreparedStatement statement = this.connection.prepareStatement(
+                "delete from roles;")) {
+            statement.executeUpdate();
+            this.sqlLog.info(String.format("Table \'Roles\' was cleared."));
+        }
+    }
 
     /**
      * Closes the connection to PostgreSQL database.
@@ -389,6 +637,7 @@ public class TrackerSQL implements ITracker, Closeable {
                 this.sqlLog.info("Closing connection.");
             } catch (SQLException e) {
                 this.sqlLog.error(e.getMessage(), e);
+                throw new IOException(e);
             }
         }
     }

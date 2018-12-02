@@ -22,7 +22,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
  * The test class for TrackerSQL.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 18/10/2018
  */
 public class TrackerSQLTest {
@@ -44,47 +44,92 @@ public class TrackerSQLTest {
 
     @Test
     public void whenConnectedThenTrue() {
-        this.testLog.info("Test 'whenConnectedThenTrue()' started.");
+        this.testLog.info("Test \'whenConnectedThenTrue()\' started.");
         assertThat(this.sql.isConnected(), is(true));
-        this.testLog.info("Test 'whenConnectedThenTrue()' ended.");
+        this.testLog.info("Test \'whenConnectedThenTrue()\' ended.");
     }
 
     @Test
-    public void whenAddsItemsThenDataBaseHasThoseItems() {
-        this.testLog.info("Test: whenAddsItemsThenDataBaseHasThoseItems() started.");
-        this.initializeDBWithScript();
-        assertThat(this.sql.findAll().size(), is(5));
-        assertThat(this.sql.findByName("test").size(), is(3));
-        this.testLog.info("Test: whenAddsItemsThenDataBaseHasThoseItems() ended.");
+    public void whenIsStructureThanTrue() {
+        this.testLog.info("Test \'whenIsStructureThanTrue\' started.");
+        assertThat(this.sql.isStructure(), is(true));
+        this.testLog.info("Test \'whenIsStructureThanTrue\' ended.");
+    }
+
+    @Test
+    public void whenAddsItemWithWrongAuthorThenFalse() {
+        this.testLog.info("Test \'whenAddsItemWithWrongAuthorThenFalse\' started.");
+        boolean result = false;
+        Item item = this.sql.add(new Item("a", "test", "test description"));
+        if (!item.getId().equals("-1")) {
+            result = true;
+        }
+        assertThat(result, is(false));
+        this.testLog.info("Test \'whenAddsItemWithWrongAuthorThenFalse\' ended.");
+    }
+
+    @Test
+    public void whenAddsItemWithWrightAuthorThenTrue() {
+        this.testLog.info("Test \'whenAddsItemWithWrightAuthorThenTrue\' started.");
+        boolean result = false;
+        this.sql.emptyDataBase(); // db is empty
+        this.fillDB();
+        Item item = this.sql.add(new Item("gsmirnov", "test", "test description"));
+        if (!item.getId().equals("-1")) {
+            result = true;
+        }
+        assertThat(result, is(true));
+        this.testLog.info("Test \'whenAddsItemWithWrightAuthorThenTrue\' ended.");
+    }
+
+    @Test
+    public void whenNoItemsThenTrue() {
+        this.testLog.info("Test \'whenNoItemsThenTrue\' started.");
+        this.sql.emptyDataBase(); // db is empty
+        this.fillDB();
+        this.sql.add(new Item("gsmirnov", "test", "test description")); // items is not empty
+        this.sql.emptyDataBase(); // db is empty
+        assertThat(this.sql.findAll().size(), is(0));
+        this.testLog.info("Test \'whenNoItemsThenTrue\' ended.");
     }
 
     @Test
     public void whenAddItemThenDBHasAnItemWithThatID() {
-        this.testLog.info("Test: whenAddItemThenDBHasAnItemWithThatID() started.");
+        this.testLog.info("Test \'whenAddItemThenDBHasAnItemWithThatID\' started.");
+        this.sql.emptyDataBase(); // db is empty
+        this.fillDB();
         Item item = this.sql.add(new Item("New request", "New description"));
         assertThat(Integer.parseInt(item.getId()), greaterThan(0));
         Item requested = this.sql.findById(item.getId());
         assertThat(item.getId(), is(requested.getId()));
-        this.testLog.info("Test: whenAddItemThenDBHasAnItemWithThatID() ended.");
+        this.testLog.info("Test \'whenAddItemThenDBHasAnItemWithThatID\' ended.");
     }
 
     @Test
     public void whenDeleteItemThanDBHasNotItemWithThatID() {
-        this.testLog.info("Test: whenDeleteItemThanDBHasNotItemWithThatID() started.");
-        this.initializeDBWithScript();
+        this.testLog.info("Test \'whenDeleteItemThanDBHasNotItemWithThatID\' started.");
+        this.sql.emptyDataBase(); // db is empty
+        this.fillDB();
         Item item = this.sql.add(new Item("New request", "New description"));
         Item requested = this.sql.findById(item.getId());
         assertThat(item.getId(), is(requested.getId()));
         assertThat(this.sql.delete(requested.getId()), is(true));
         assertThat(this.sql.delete(requested.getId()), is(false));
         assertThat(this.sql.findById(item.getId()), is((Item) null));
-        this.testLog.info("Test: whenDeleteItemThanDBHasNotItemWithThatID() ended.");
+        this.testLog.info("Test \'whenDeleteItemThanDBHasNotItemWithThatID\' ended.");
     }
 
     @Test
     public void whenUpdateItemThanDBHasUpdatedItemWithThatID() {
-        this.testLog.info("Test: whenUpdateItemThanDBHasUpdatedItemWithThatID() started.");
-        this.initializeDBWithScript(); // 3 items named '%test%', 2 items named '%request%'
+        this.testLog.info("Test \'whenUpdateItemThanDBHasUpdatedItemWithThatID\' started.");
+        this.sql.emptyDataBase(); // db is empty
+        this.fillDB();
+        // 3 items named '%test%', 2 items named '%request%'
+        this.sql.add(new Item("gsmirnov", "test", "test description"));
+        this.sql.add(new Item("akaleganov", "test2", "test description2"));
+        this.sql.add(new Item("guest", "test3", "test description3"));
+        this.sql.add(new Item("guest", "request1", "request description1"));
+        this.sql.add(new Item("gsmirnov", "request2", "request description2"));
         ArrayList<Item> requested = this.sql.findByName("test");
         assertThat(requested.size(), is(3)); // 3 items named '%test%'
         assertThat(this.sql.replace(requested.get(0).getId(), new Item("New request", "New description")),
@@ -101,51 +146,23 @@ public class TrackerSQLTest {
         assertThat(updRequested.size(), is(0)); // no items named %test% left
         updRequested = this.sql.findByName("request");
         assertThat(updRequested.size(), is(5)); // 5 items named %request%
-        this.testLog.info("Test: whenUpdateItemThanDBHasUpdatedItemWithThatID() ended.");
+        this.testLog.info("Test \'whenUpdateItemThanDBHasUpdatedItemWithThatID\' ended.");
     }
 
-    @Test
-    public void whenIsStructureThanTrue() {
-        assertThat(this.sql.isStructure(), is(true));
-    }
-
-    private void initializeDBWithScript() {
-        Connection connection;
-        try {
-            InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties");
-            Properties config = new Properties();
-            config.load(in);
-            Class.forName(config.getProperty("driver-class-name"));
-            connection = DriverManager.getConnection(
-                    config.getProperty("url"),
-                    config.getProperty("username"),
-                    config.getProperty("password")
-            );
-            this.testLog.info("Connected to initialize database.");
-        } catch (Exception e) {
-            this.testLog.error(e.getMessage(), e);
-            throw new IllegalStateException(e);
-        }
-
-        String[] aSQLScriptFilePath = {"insert0.sql", "insert1.sql", "insert2.sql", "insert3.sql"};
-        for (String script : aSQLScriptFilePath) {
-            try {
-                ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
-                Reader reader = new BufferedReader(new FileReader(script));
-                scriptRunner.runScript(reader);
-            } catch (Exception e) {
-                this.testLog.error(e.getMessage(), e);
-            }
-        }
-
-        if (connection != null) {
-            try {
-                connection.close();
-                this.testLog.info("Closing connection.");
-            } catch (SQLException e) {
-                this.testLog.error(e.getMessage(), e);
-            }
-        }
-        this.testLog.info("Initialize connection closed.");
+    public void fillDB() {
+        this.sql.addRole("admin");
+        this.sql.addRole("user");
+        this.sql.addUser(new User("gsmirnov", "123", "admin"));
+        this.sql.addUser(new User("akaleganov", "123", "user"));
+        this.sql.addUser(new User("guest", "123", "user"));
+        this.sql.addCategory("normal");
+        this.sql.addCategory("urgent");
+        this.sql.addCategory("critical");
+        this.sql.addCategory("default");
+        this.sql.addState("accepted");
+        this.sql.addState("analyze");
+        this.sql.addState("in work");
+        this.sql.addState("done");
+        this.sql.addState("new");
     }
 }
