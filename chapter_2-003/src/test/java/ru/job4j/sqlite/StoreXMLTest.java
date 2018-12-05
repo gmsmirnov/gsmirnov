@@ -77,18 +77,18 @@ public class StoreXMLTest {
         list.add(new StoreXML.Field(2));
         StoreXML.Entries entries = new StoreXML.Entries(list);
         store.save(list);
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                "<entries>\n" +
-                "    <entry>\n" +
-                "        <value>0</value>\n" +
-                "    </entry>\n" +
-                "    <entry>\n" +
-                "        <value>1</value>\n" +
-                "    </entry>\n" +
-                "    <entry>\n" +
-                "        <value>2</value>\n" +
-                "    </entry>\n" +
-                "</entries>\n";
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<entries>\n"
+                + "    <entry>\n"
+                + "        <value>0</value>\n"
+                + "    </entry>\n"
+                + "    <entry>\n"
+                + "        <value>1</value>\n"
+                + "    </entry>\n"
+                + "    <entry>\n"
+                + "        <value>2</value>\n"
+                + "    </entry>\n"
+                + "</entries>\n";
         String result = new String(Files.readAllBytes(output.toPath()));
         assertThat(result, is(expected));
     }
