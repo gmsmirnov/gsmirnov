@@ -21,4 +21,3 @@ services:
 - postgresql
 before_script:
 - psql -c "CREATE DATABASE tracker;" -U postgres
-#- psql -c "CREATE USER postgres WITH PASSWORD 'postgres';" -U postgres
