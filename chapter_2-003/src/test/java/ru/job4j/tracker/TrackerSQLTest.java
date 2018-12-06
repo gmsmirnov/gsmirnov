@@ -1,22 +1,17 @@
 package ru.job4j.tracker;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-
-import com.ibatis.common.jdbc.ScriptRunner;
 
 /**
  * The test class for TrackerSQL.
@@ -31,7 +26,7 @@ public class TrackerSQLTest {
 
     @Before
     public void init() {
-        this.testLog = Logger.getLogger(TrackerSQLTest.class);
+        this.testLog = LogManager.getLogger(TrackerSQLTest.class);
         this.sql = new TrackerSQL();
         this.testLog.info("TrackerSQLTest started.");
     }

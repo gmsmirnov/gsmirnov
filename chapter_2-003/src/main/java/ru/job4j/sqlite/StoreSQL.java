@@ -1,6 +1,7 @@
 package ru.job4j.sqlite;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class StoreSQL implements Closeable {
     /**
      * The logger for SQLite. It used for storing the working with database.
      */
-    private final Logger sqLiteLog = Logger.getLogger(StoreSQL.class);
+    private final Logger sqLiteLog = LogManager.getLogger(StoreSQL.class);
 
     /**
      * The connection to database.

@@ -1,7 +1,8 @@
 package ru.job4j.tracker;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.sql.*;
@@ -19,7 +20,7 @@ public class TrackerSQL implements ITracker, Closeable {
     /**
      * The logger for TrackerSQL. It used for storing the working log of this tracker.
      */
-    private final Logger sqlLog = Logger.getLogger(TrackerSQL.class);
+    private final Logger sqlLog = LogManager.getLogger(TrackerSQL.class);
 
     /**
      * The connection to PostgreSQL database.
