@@ -13,7 +13,7 @@ import java.util.Properties;
  * Class TrackerSQL - class wrapper, that manage requests. Requests stored in PostgreSQL database.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 18/10/2018
  */
 public class TrackerSQL implements ITracker, Closeable {
@@ -26,6 +26,15 @@ public class TrackerSQL implements ITracker, Closeable {
      * The connection to PostgreSQL database.
      */
     private final Connection connection;
+
+    /**
+     * The constructor with outer connection.
+     *
+     * @param connection - outer connection.
+     */
+    public TrackerSQL(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * The constructor which creates and initialises the connection to PostgreSQL database.
