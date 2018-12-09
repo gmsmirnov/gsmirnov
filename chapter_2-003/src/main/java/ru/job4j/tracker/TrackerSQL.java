@@ -34,6 +34,7 @@ public class TrackerSQL implements ITracker, Closeable {
      */
     public TrackerSQL(Connection connection) {
         this.connection = connection;
+        this.createStructure();
     }
 
     /**
@@ -212,8 +213,10 @@ public class TrackerSQL implements ITracker, Closeable {
         ArrayList<Item> result = new ArrayList<Item>();
         try (Statement statement = this.connection.createStatement()) {
             try (ResultSet rslSet = statement.executeQuery(
-                    "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category from items, users, categories, states\n"
-                            + " where items.author = users.id and items.state = states.id and items.category = categories.id;")) {
+                    "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category "
+                            + "from ((items join users on items.author = users.id) "
+                            + "join states on items.state = states.id) "
+                            + "join categories on items.category = categories.id;")) {
                 while (rslSet.next()) {
                     result.add(new Item(
                             rslSet.getString("id"),
@@ -242,8 +245,11 @@ public class TrackerSQL implements ITracker, Closeable {
     public ArrayList<Item> findByName(String name) {
         ArrayList<Item> result = new ArrayList<Item>();
         try (PreparedStatement statement = this.connection.prepareStatement(
-                "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category from items, users, categories, states\n"
-                        + " where items.author = users.id and items.state = states.id and items.category = categories.id and items.title like ?;")) {
+                "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category "
+                        + "from (((items join users on items.author = users.id) "
+                        + "join states on items.state = states.id) "
+                        + "join categories on items.category = categories.id) "
+                        + "where items.title like ?;")) {
             statement.setString(1, "%" + name + "%");
             try (ResultSet rslSet = statement.executeQuery()) {
                 while (rslSet.next()) {
@@ -274,8 +280,11 @@ public class TrackerSQL implements ITracker, Closeable {
     public Item findById(String id) {
         Item result = null;
         try (PreparedStatement statement = this.connection.prepareStatement(
-                "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category from items, users, categories, states\n"
-                        + " where items.author = users.id and items.state = states.id and items.category = categories.id and items.id = ?;")) {
+                "select items.id, users.name, items.title, items.description, items.creation_date, states.state, categories.category "
+                        + "from ((items join users on items.author = users.id) "
+                        + "join states on items.state = states.id) "
+                        + "join categories on items.category = categories.id "
+                        + "where items.id = ?;")) {
             statement.setInt(1, Integer.parseInt(id));
             try (ResultSet rslSet = statement.executeQuery()) {
                 if (rslSet.next()) {
