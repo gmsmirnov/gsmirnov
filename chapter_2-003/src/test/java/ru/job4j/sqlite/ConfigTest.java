@@ -16,6 +16,6 @@ public class ConfigTest {
     @Test
     public void whenCreateConfigThenGetURLGetsRightURL() {
         Config config = new Config();
-        assertThat(config.get("url"), is("jdbc:sqlite:C:/sqlite/db/magnit.db"));
+        assertThat(config.get("url"), is("jdbc:sqlite:resources.magnit.db"));
     }
 }

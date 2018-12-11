@@ -127,7 +127,8 @@ public class StoreSQL implements Closeable {
                 + "number integer"
                 + ");";
         try (Statement statement = this.connection.createStatement()) {
-            statement.executeQuery(sql);
+            //statement.executeQuery(sql);
+            statement.execute(sql);
             this.sqLiteLog.info("Table \'entry\' has been created.");
         } catch (SQLException e) {
             this.sqLiteLog.error(e.getMessage(), e);
