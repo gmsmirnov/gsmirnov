@@ -7,7 +7,7 @@ jdk:
 # Start PostgreSQL
   services:
   - postgresql
-  before_install:
+  before_script:
   - psql -c "CREATE DATABASE tracker;" -U postgres
 
 cache:
