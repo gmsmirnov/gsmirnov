@@ -1,7 +1,18 @@
 # используем язык java. Travis CI поддерживает другие языки тоже.
 language: java
-# используем режим обычного пользователя для сборки проекта.
-sudo: false
+
+jdk:
+  - openjdk11
+
+# Start PostgreSQL
+  services:
+  - postgresql
+  before_install:
+  - psql -c "CREATE DATABASE tracker;" -U postgres
+
+cache:
+  directories:
+  - $HOME/.m2
 
 # после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
 # Здесь используется сторонни сервис https://codecov.io/
@@ -15,9 +26,3 @@ notifications:
       - artress@ngs.ru
     on_success: never # default: change
     on_failure: always # default: always
-
-# Start PostgreSQL
-services:
-- postgresql
-before_script:
-- psql -c "CREATE DATABASE tracker;" -U postgres
