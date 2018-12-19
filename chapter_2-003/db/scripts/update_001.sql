@@ -1,3 +1,5 @@
+create database tracker;
+
 -- main tables
 
 create table if not exists roles(
