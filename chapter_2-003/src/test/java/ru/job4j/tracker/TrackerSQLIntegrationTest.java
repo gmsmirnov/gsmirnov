@@ -2,6 +2,8 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -26,9 +28,9 @@ public class TrackerSQLIntegrationTest {
     private final Logger testLog = LogManager.getLogger(TrackerSQLIntegrationTest.class);
 
     public Connection initIntegration() {
-        try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties")) {
+        try {
             Properties config = new Properties();
-            config.load(in);
+            config.load(new FileInputStream(new File("app.properties")));
             Class.forName(config.getProperty("driver-class-name"));
             return DriverManager.getConnection(
                     config.getProperty("url"),

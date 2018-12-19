@@ -42,9 +42,8 @@ public class TrackerSQL implements ITracker, Closeable {
      */
     public TrackerSQL() {
         try {
-            InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties");
             Properties config = new Properties();
-            config.load(in);
+            config.load(new FileInputStream(new File("app.properties")));
             Class.forName(config.getProperty("driver-class-name"));
             this.connection = DriverManager.getConnection(
                     config.getProperty("url"),
