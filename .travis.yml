@@ -24,5 +24,5 @@ notifications:
 # Start PostgreSQL
 services:
 - postgresql
-before_script:
+before_install:
 - psql -c "CREATE DATABASE tracker;" -U postgres
