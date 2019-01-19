@@ -26,3 +26,5 @@ services:
 - postgresql
 before_install:
 - psql -c "CREATE DATABASE tracker;" -U postgres
+- psql -c "CREATE DATABASE sqlru;" -U postgres
+- psql -c "CREATE DATABASE sqlrutest;" -U postgres
