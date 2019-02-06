@@ -20,6 +20,7 @@
         <module>chapter_2-001</module>
 		<module>chapter_2-003</module>
 		<module>chapter_3-001</module>
+        <module>chapter_3-002</module>
     </modules>
 	 
 	<dependencies>
