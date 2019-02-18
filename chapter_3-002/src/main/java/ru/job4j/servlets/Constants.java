@@ -47,4 +47,19 @@ public class Constants {
      * Param "action" in in the POST request.
      */
     public static final String PARAM_ACTION = "action";
+
+    /**
+     * ../create - the link for create user page.
+     */
+    public static final String PAGE_CREATE = "/create";
+
+    /**
+     * ../list - the link for the list of users page.
+     */
+    public static final String PAGE_LIST = "/list";
+
+    /**
+     * ../edit - the link for update user page.
+     */
+    public static final String PAGE_UPDATE = "/edit";
 }
