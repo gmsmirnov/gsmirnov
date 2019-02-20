@@ -5,13 +5,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Servlet for updating a user.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 16/02/2019
  */
 public class UserUpdateServlet extends HttpServlet {
@@ -31,24 +30,12 @@ public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        writer.append("<!DOCTYPE html>"
-                + "<html lang=\"en\">"
-                + "<head>"
-                + "    <meta charset=\"UTF-8\">"
-                + "    <title>Create new user</title>"
-                + "</head>"
-                + "<body>"
-                + "Update user:"
-                + this.createUserForm(req.getContextPath(), Integer.parseInt(req.getParameter(Constants.PARAM_ID)))
-                + this.listButton(req.getContextPath())
-                + "</body>"
-                + "</html>");
-        writer.flush();
+        System.out.println("id: " + req.getParameter(Constants.PARAM_ID));
+        resp.sendRedirect(String.format("%s%s?id=%d", req.getContextPath(), Constants.PAGE_JSP_UPDATE, Integer.parseInt(req.getParameter(Constants.PARAM_ID))));
     }
 
     /**
-     * Deletes a user request. The POST request.
+     * Update a user request. The POST request.
      *
      * @param req - HTTP request.
      * @param resp - HTTP response.
@@ -65,43 +52,6 @@ public class UserUpdateServlet extends HttpServlet {
                 req.getParameter(Constants.PARAM_EMAIL)
         ));
         dispatcher.sent(Constants.ACTION_UPDATE);
-        doGet(req, resp);
-    }
-
-    /**
-     * Creates the HTML code of list of users button.
-     *
-     * @param context - the web-app context (e.g. http://localhost:8081)
-     * @return the HTML code of list of users button.
-     */
-    private String listButton(String context) {
-        StringBuilder create = new StringBuilder("</br>");
-        return create.append("<form action='" + context + Constants.PAGE_LIST
-                + "' method='get'>"
-                + "<input type='submit' value='List'>"
-                + "</form>").toString();
-    }
-
-    /**
-     * Creates a filled HTML-form for update the specified user.
-     *
-     * @param context - the web-app context (e.g. http://localhost:8081).
-     * @param id - the id of user to update.
-     * @return - HTML code of update user form.
-     */
-    private String createUserForm(String context, int id) {
-        User user = this.logic.findById(id);
-        StringBuilder form = new StringBuilder("Create new user:");
-        form.append("<form action='" + context + Constants.PAGE_UPDATE + "' method='post'>"
-                + "<table>"
-                + "<tr><td>ID:</td><td><input type='text' name='id' value='" + user.getId() +  "'/></td></tr>"
-                + "<tr><td>Name:</td><td><input type='text' name='name' value='" + user.getName() +  "'/></td></tr>"
-                + "<tr><td>Login:</td><td><input type='text' name='login' value='" + user.getLogin() +  "'/></td></tr>"
-                + "<tr><td>E-mail:</td><td><input type='text' name='email' value='" + user.getEmail() +  "'/></td></tr>"
-                + "<tr><td><input type='submit' value='Edit'></td></tr>"
-                + "</table>"
-                + "</form>"
-        );
-        return form.toString();
+        resp.sendRedirect(String.format("%s%s?id=%d", req.getContextPath(), Constants.PAGE_JSP_UPDATE, Integer.parseInt(req.getParameter(Constants.PARAM_ID))));
     }
 }

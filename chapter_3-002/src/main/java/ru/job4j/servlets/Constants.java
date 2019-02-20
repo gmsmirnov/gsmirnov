@@ -4,7 +4,7 @@ package ru.job4j.servlets;
  * Constants for CRUD Servlet.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 14/02/2019
  */
 public class Constants {
@@ -62,4 +62,19 @@ public class Constants {
      * ../edit - the link for update user page.
      */
     public static final String PAGE_UPDATE = "/edit";
+
+    /**
+     * ../create.jsp - the link for create user JSP-page.
+     */
+    public static final String PAGE_JSP_CREATE = "/create.jsp";
+
+    /**
+     * ../list.jsp - the link for the list of users JSP-page.
+     */
+    public static final String PAGE_JSP_LIST = "/list.jsp";
+
+    /**
+     * ../edit.jsp - the link for update user JSP-page.
+     */
+    public static final String PAGE_JSP_UPDATE = "/edit.jsp";
 }
