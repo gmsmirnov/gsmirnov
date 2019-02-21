@@ -30,7 +30,6 @@ public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        System.out.println("id: " + req.getParameter(Constants.PARAM_ID));
         resp.sendRedirect(String.format("%s%s?id=%d", req.getContextPath(), Constants.PAGE_JSP_UPDATE, Integer.parseInt(req.getParameter(Constants.PARAM_ID))));
     }
 

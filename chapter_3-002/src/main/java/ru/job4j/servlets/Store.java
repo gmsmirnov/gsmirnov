@@ -53,4 +53,20 @@ public interface Store {
      * @return true if the specified user exists in the container.
      */
     boolean contains(User user);
+
+    /**
+     * Checks if the specified user's key is used in the container.
+     *
+     * @param user - the specified user, which id checks.
+     * @return true if the user's id is used like a key.
+     */
+    public boolean containsKey(User user);
+
+    /**
+     * Checks if the specified id is used in the container.
+     *
+     * @param id - the specified id.
+     * @return true if the id is used like a key.
+     */
+    public boolean containsKey(int id);
 }

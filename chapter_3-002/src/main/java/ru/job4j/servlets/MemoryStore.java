@@ -105,6 +105,7 @@ public class MemoryStore implements Store {
      * @param user - the specified user, which id checks.
      * @return true if the user's id is used like a key.
      */
+    @Override
     public boolean containsKey(User user) {
         return this.storage.containsKey(user.getId());
     }
@@ -115,6 +116,7 @@ public class MemoryStore implements Store {
      * @param id - the specified id.
      * @return true if the id is used like a key.
      */
+    @Override
     public boolean containsKey(int id) {
         return this.storage.containsKey(id);
     }

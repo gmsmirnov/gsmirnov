@@ -18,7 +18,7 @@ public class ValidateService {
     /**
      * The storage singleton instance.
      */
-    private final MemoryStore memory = MemoryStore.getSingletonMemoryInstance();
+    private final Store store = DBStore.getDBStoreInstance();
 
     /**
      * Default constructor.
@@ -43,8 +43,8 @@ public class ValidateService {
      */
     public boolean add(User user) {
         boolean result = false;
-        if (!this.memory.contains(user)) {
-            this.memory.add(user);
+        if (!this.store.contains(user)) {
+            this.store.add(user);
             result = true;
         }
         return result;
@@ -58,8 +58,8 @@ public class ValidateService {
      */
     public boolean update(User user) {
         boolean result = false;
-        if (this.memory.containsKey(user)) {
-            this.memory.update(user);
+        if (this.store.containsKey(user)) {
+            this.store.update(user);
             result = true;
         }
         return result;
@@ -73,8 +73,8 @@ public class ValidateService {
      */
     public boolean delete(User user) {
         boolean result = false;
-        if (this.memory.containsKey(user)) {
-            this.memory.delete(user);
+        if (this.store.containsKey(user)) {
+            this.store.delete(user);
             result = true;
         }
         return result;
@@ -86,7 +86,7 @@ public class ValidateService {
      * @return a collection of all users.
      */
     public Collection<User> findAll() {
-        return this.memory.findAll();
+        return this.store.findAll();
     }
 
     /**
@@ -97,8 +97,8 @@ public class ValidateService {
      */
     public User findById(int id) {
         User result = null;
-        if (this.memory.containsKey(id)) {
-            result = this.memory.findById(id);
+        if (this.store.containsKey(id)) {
+            result = this.store.findById(id);
         }
         return result;
     }
