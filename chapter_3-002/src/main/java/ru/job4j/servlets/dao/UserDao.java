@@ -1,42 +1,48 @@
-package ru.job4j.servlets;
+package ru.job4j.servlets.dao;
+
+import ru.job4j.servlets.dao.exception.AlreadyExistsModelWithSuchIdException;
+import ru.job4j.servlets.dao.exception.DaoBusinessException;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
+import ru.job4j.servlets.dao.exception.NoSuchModelException;
+import ru.job4j.servlets.model.User;
 
 import java.util.Collection;
 
 /**
- * Storage interface.
+ * Data access object interface. Base CRUD operations.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 07/02/2019
  */
-public interface Store {
+public interface UserDao {
     /**
      * Adds the specified user to the container.
      *
      * @param user - the specified user.
      */
-    void add(User user);
+    void add(User user) throws DaoSystemException;
 
     /**
      * Updates the specified user in the container.
      *
      * @param user - the specified user.
      */
-    void update(User user);
+    void update(User user) throws DaoSystemException;
 
     /**
      * Deletes the specified user in the container.
      *
      * @param user - the specified user.
      */
-    void delete(User user);
+    void delete(User user) throws DaoSystemException;
 
     /**
      * Gets a collection of all users in the storage.
      *
      * @return a collection of all users in the storage.
      */
-    Collection<User> findAll();
+    Collection<User> findAll() throws DaoSystemException;
 
     /**
      * Finds the user in the store by the specified id.
@@ -44,7 +50,7 @@ public interface Store {
      * @param id - the specified id.
      * @return the user which is mapped to the specified id.
      */
-    User findById(int id);
+    User findById(int id) throws DaoSystemException;
 
     /**
      * Checks if the specified user is in the container.
@@ -52,7 +58,7 @@ public interface Store {
      * @param user - the specified user.
      * @return true if the specified user exists in the container.
      */
-    boolean contains(User user);
+    boolean contains(User user) throws DaoSystemException;
 
     /**
      * Checks if the specified user's key is used in the container.
@@ -60,7 +66,7 @@ public interface Store {
      * @param user - the specified user, which id checks.
      * @return true if the user's id is used like a key.
      */
-    public boolean containsKey(User user);
+    public boolean containsKey(User user) throws DaoSystemException;
 
     /**
      * Checks if the specified id is used in the container.
@@ -68,5 +74,5 @@ public interface Store {
      * @param id - the specified id.
      * @return true if the id is used like a key.
      */
-    public boolean containsKey(int id);
+    public boolean containsKey(int id) throws DaoSystemException;
 }

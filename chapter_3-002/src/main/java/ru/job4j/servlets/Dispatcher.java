@@ -1,5 +1,11 @@
 package ru.job4j.servlets;
 
+import ru.job4j.servlets.dao.exception.AlreadyExistsModelWithSuchIdException;
+import ru.job4j.servlets.dao.exception.DaoBusinessException;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
+import ru.job4j.servlets.dao.exception.NullArgumentException;
+import ru.job4j.servlets.model.User;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -8,7 +14,7 @@ import java.util.function.Function;
  * Dispatcher picks up the right logic action depending of type of POST request action param.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 14/02/2019
  */
 public class Dispatcher {
@@ -30,7 +36,15 @@ public class Dispatcher {
      */
     public Function<String, Boolean> create(User user) {
         return action -> {
-            this.logic.add(user);
+            try {
+                this.logic.add(user);
+            } catch (DaoSystemException e) {
+                e.printStackTrace();
+            } catch (AlreadyExistsModelWithSuchIdException e) {
+                e.printStackTrace();
+            } catch (NullArgumentException e) {
+                e.printStackTrace();
+            }
             return true;
         };
     }
@@ -43,7 +57,13 @@ public class Dispatcher {
      */
     public Function<String, Boolean> update(User user) {
         return action -> {
-            this.logic.update(user);
+            try {
+                this.logic.update(user);
+            } catch (DaoSystemException e) {
+                e.printStackTrace();
+            } catch (NullArgumentException e) {
+                e.printStackTrace();
+            }
             return true;
         };
     }
@@ -56,7 +76,13 @@ public class Dispatcher {
      */
     public Function<String, Boolean> delete(User user) {
         return action -> {
-            this.logic.delete(user);
+            try {
+                this.logic.delete(user);
+            } catch (DaoSystemException e) {
+                e.printStackTrace();
+            } catch (NullArgumentException e) {
+                e.printStackTrace();
+            }
             return true;
         };
     }

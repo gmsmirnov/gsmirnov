@@ -1,4 +1,4 @@
-package ru.job4j.servlets;
+package ru.job4j.servlets.model;
 
 import java.util.Date;
 import java.util.Objects;
@@ -7,10 +7,30 @@ import java.util.Objects;
  * User model description.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 07/02/2019
  */
 public class User {
+    /**
+     * Param "id" in in the POST request.
+     */
+    public static final String PARAM_ID = "id";
+
+    /**
+     * Param "name" in in the POST request.
+     */
+    public static final String PARAM_NAME = "name";
+
+    /**
+     * Param "login" in in the POST request.
+     */
+    public static final String PARAM_LOGIN = "login";
+
+    /**
+     * Param "email" in in the POST request.
+     */
+    public static final String PARAM_EMAIL = "email";
+
     /**
      * User's id.
      */

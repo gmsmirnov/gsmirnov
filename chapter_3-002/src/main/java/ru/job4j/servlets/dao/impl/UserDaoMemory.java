@@ -1,4 +1,7 @@
-package ru.job4j.servlets;
+package ru.job4j.servlets.dao.impl;
+
+import ru.job4j.servlets.dao.UserDao;
+import ru.job4j.servlets.model.User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -8,10 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * Implementation of a memory storage.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 07/02/2019
  */
-public class MemoryStore implements Store {
+public class UserDaoMemory implements UserDao {
     /**
      * Thread sage hash map is a storage for users.
      */
@@ -20,12 +23,12 @@ public class MemoryStore implements Store {
     /**
      * The singleton instance of the storage.
      */
-    private static MemoryStore singletonMemoryInstance = new MemoryStore();
+    private static UserDaoMemory singletonMemoryInstance = new UserDaoMemory();
 
     /**
      * Default constructor.
      */
-    private MemoryStore() {
+    private UserDaoMemory() {
     }
 
     /**
@@ -33,8 +36,8 @@ public class MemoryStore implements Store {
      *
      * @return the singleton instance of the storage.
      */
-    public static MemoryStore getSingletonMemoryInstance() {
-        return MemoryStore.singletonMemoryInstance;
+    public static UserDaoMemory getSingletonMemoryInstance() {
+        return UserDaoMemory.singletonMemoryInstance;
     }
 
     /**

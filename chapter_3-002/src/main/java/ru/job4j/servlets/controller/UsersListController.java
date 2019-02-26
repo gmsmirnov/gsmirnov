@@ -1,4 +1,11 @@
-package ru.job4j.servlets;
+package ru.job4j.servlets.controller;
+
+import ru.job4j.servlets.Constants;
+import ru.job4j.servlets.Dispatcher;
+import ru.job4j.servlets.ValidateService;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
+import ru.job4j.servlets.dao.exception.NoSuchModelException;
+import ru.job4j.servlets.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,10 +17,10 @@ import java.io.IOException;
  * Servlet for user model.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 07/02/2019
  */
-public class UsersServlet extends HttpServlet {
+public class UsersListController extends HttpServlet {
     /**
      * The logic singleton instance.
      */
@@ -29,8 +36,12 @@ public class UsersServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_JSP_LIST));
+        try {
+            req.setAttribute(Constants.ATTR_USERS_LIST, this.logic.findAll());
+        } catch (DaoSystemException e) {
+            /*NOP*/
+        }
+        req.getRequestDispatcher(Constants.PAGE_JSP_LIST).forward(req, resp);
     }
 
     /**
@@ -43,9 +54,12 @@ public class UsersServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        Dispatcher dispatcher = new Dispatcher(this.logic.findById(Integer.parseInt(req.getParameter(Constants.PARAM_ID))));
-        dispatcher.sent(Constants.ACTION_DELETE);
-        resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_JSP_LIST));
+        try {
+            Dispatcher dispatcher = new Dispatcher(this.logic.findById(Integer.parseInt(req.getParameter(User.PARAM_ID))));
+            dispatcher.sent(Constants.ACTION_DELETE);
+            this.doGet(req, resp);
+        } catch (DaoSystemException | NoSuchModelException e) {
+            /*NOP*/
+        }
     }
 }
