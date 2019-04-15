@@ -7,30 +7,57 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function validate() {
+            var result = true;
+            if (document.getElementsByName("firstname")[0].value == '') {
+                alert("Please correct first name.")
+                result = false;
+            } else if (document.getElementsByName("lastname")[0].value == '') {
+                alert("Please correct last name.")
+                result = false;
+            } else if (document.getElementsByName("email")[0].value == '') {
+                alert("Please correct email.")
+                result = false;
+            } else if (document.getElementsByName("description")[0].value == '') {
+            alert("Please correct description.")
+            result = false;
+            }
+            return result;
+        }
+    </script>
 </head>
 <body>
 
     <div class="container">
-        <form>
+        <form method="post" onsubmit="return validate();">
             <h2>Add user</h2>
-            <label>First name:</label><br/>
-            <input type="text" name="firstname">
-            <br>
-            <label>Last name:</label><br/>
-            <input type="text" name="lastname">
-            <br/>
-            <label>E-mail:</label><br/>
-            <input type="email" name="email">
-            <br/>
+            <div class="form-group">
+            <label for="firstname">First name:</label><br/>
+            <input type="text" name="firstname" id="firstname">
+            </div>
+            <div class="form-group">
+            <label for="lastname">Last name:</label><br/>
+            <input type="text" name="lastname" id="lastname">
+            </div>
+            <div class="form-group">
+            <label for="email">E-mail:</label><br/>
+            <input type="email" name="email" id="email">
+            </div>
+            <div class="form-group">
             <label>Gender:</label>
             <br/>
             <input type="radio" name="gender" value="male" checked> Male<br>
             <input type="radio" name="gender" value="female"> Female<br>
+            </div>
+            <div class="form-group">
             <label>Description:</label>
             <br/>
             <textarea name="description" rows="10" cols="30">Write down description here.</textarea>
-            <br/><br/>
-            <input type="submit" value="Submit">
+            </div>
+            <br/>
+            <div class="form-group"><input type="submit" value="Submit" name="submit">
+            </div>
         </form>
     </div>
 
