@@ -11,26 +11,43 @@
         function validate() {
             var result = true;
             if (document.getElementsByName("firstname")[0].value == '') {
-                alert("Please correct first name.")
+                alert("Please correct first name.");
                 result = false;
             } else if (document.getElementsByName("lastname")[0].value == '') {
-                alert("Please correct last name.")
+                alert("Please correct last name.");
                 result = false;
             } else if (document.getElementsByName("email")[0].value == '') {
-                alert("Please correct email.")
+                alert("Please correct email.");
                 result = false;
             } else if (document.getElementsByName("description")[0].value == '') {
-            alert("Please correct description.")
+            alert("Please correct description.");
             result = false;
             }
             return result;
+        }
+
+        function addRow() {
+            var name = $('#firstname').val();
+            var surname = $('#lastname').val();
+            var mail = $('#email').val();
+            $('#table tr:last').after(
+                '<tr><td>' + name + '</td>'
+                + '<td>' + surname + '</td>'
+                + '<td>' + mail + '</td></tr>'
+            );
+        }
+
+        function add() {
+            if (validate()) {
+                addRow();
+            }
         }
     </script>
 </head>
 <body>
 
     <div class="container">
-        <form method="post" onsubmit="return validate();">
+        <form action="" method="post" onsubmit="add(); return false;">
             <h2>Add user</h2>
             <div class="form-group">
             <label for="firstname">First name:</label><br/>
@@ -63,7 +80,7 @@
 
     <div class="container">
         <h2>Users</h2>
-        <table class="table table-striped">
+        <table class="table table-striped" id="table">
             <thead>
             <tr>
                 <th>Firstname</th>
