@@ -1,6 +1,9 @@
 package ru.job4j.servlets.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.job4j.servlets.Constants;
+import ru.job4j.servlets.Validate;
 import ru.job4j.servlets.ValidateService;
 import ru.job4j.servlets.dao.exception.DaoSystemException;
 import ru.job4j.servlets.dao.exception.NoSuchModelException;
@@ -16,14 +19,19 @@ import java.io.IOException;
  * User controller. Checks user for any errors and redirects to appropriate page.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 24/02/2019
  */
 public class UserController extends HttpServlet {
     /**
+     * The logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(UserController.class.getName());
+
+    /**
      * The logic singleton instance.
      */
-    private final ValidateService logic = ValidateService.getSingletonValidateServiceInstance();
+    private final Validate logic = ValidateService.getSingletonValidateServiceInstance();
 
     /**
      * Shows user's profile (forwards request to jsp view page).
@@ -39,12 +47,14 @@ public class UserController extends HttpServlet {
         if (idParam != null) {
             try {
                 req.setAttribute(Constants.ATTR_USER, this.logic.findById(Integer.parseInt(idParam)));
+                UserController.LOG.info(String.format("Current user: '%s' requests the profile of user '%s'",
+                        req.getSession().getAttribute(Constants.ATTR_LOGIN), ((User) req.getAttribute(Constants.ATTR_USER)).getLogin()));
                 req.getRequestDispatcher(Constants.PAGE_JSP_USER).forward(req, resp);
             } catch (DaoSystemException | NoSuchModelException e) {
-                resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_JSP_ERROR));
+                resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_ERROR));
             }
         } else {
-            resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_JSP_ERROR));
+            resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_ERROR));
         }
     }
 }

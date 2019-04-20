@@ -1,17 +1,19 @@
 package ru.job4j.servlets.dao.impl;
 
 import ru.job4j.servlets.dao.UserDao;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
 import ru.job4j.servlets.model.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Implementation of a memory storage.
+ * Implementation of a memory storage. The memory storage is a hash-map.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.4
  * @since 07/02/2019
  */
 public class UserDaoMemory implements UserDao {
@@ -29,6 +31,7 @@ public class UserDaoMemory implements UserDao {
      * Default constructor.
      */
     private UserDaoMemory() {
+        this.storage.put(0, new User("root", "root@mail.net", "root", "Russia", "Moscow", "admin"));
     }
 
     /**
@@ -122,5 +125,53 @@ public class UserDaoMemory implements UserDao {
     @Override
     public boolean containsKey(int id) {
         return this.storage.containsKey(id);
+    }
+
+    /**
+     * Checks if the user's login is already used.
+     *
+     * @param user - the specified user which login checks.
+     * @return true if the user's login is used.
+     */
+    @Override
+    public boolean containsLogin(User user) {
+        boolean result = false;
+        for (User value : this.storage.values()) {
+            if (value.getLogin().equals(user.getLogin())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Finds user by login.
+     *
+     * @param login - the specified login.
+     * @return the user with the specified login.
+     */
+    @Override
+    public User findByLogin(String login) {
+        User result = null;
+        for (User value : this.storage.values()) {
+            if (login.equals(value.getLogin())) {
+                result = value;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /*Not supported*/
+    @Override
+    public List<String> findCitiesByCountry(String country) throws DaoSystemException {
+        return null;
+    }
+
+    /*Not supported*/
+    @Override
+    public List<String> findCountries() throws DaoSystemException {
+        return null;
     }
 }

@@ -36,7 +36,7 @@ public class Constants {
     /**
      * ../list - the link for the list of users page.
      */
-    public static final String PAGE_LIST = "/";
+    public static final String PAGE_LIST = "/list";
 
     /**
      * ../edit - the link for update user page.
@@ -49,12 +49,27 @@ public class Constants {
     public static final String PAGE_USER = "/user";
 
     /**
-     * ../error.jsp - the link for 404 page not found jsp page.
+     * ../login - the link for login page.
      */
-    public static final String PAGE_JSP_ERROR = "/error.jsp";
+    public static final String PAGE_LOGIN = "/login";
 
     /**
-     * ../user.jsp - the link for user jsp page.
+     * ../login - the link for login page.
+     */
+    public static final String PAGE_LOGOUT = "/logout";
+
+    /**
+     * ../login - the link for login page.
+     */
+    public static final String PAGE_ERROR = "/error";
+
+    /**
+     * ../error.jsp - the link for 404 page not found jsp page.
+     */
+    public static final String PAGE_JSP_ERROR = "/WEB-INF/views/error.jsp";
+
+    /**
+     * ../user.jsp - the link for user JSP-page.
      */
     public static final String PAGE_JSP_USER = "/WEB-INF/views/user.jsp";
 
@@ -74,9 +89,24 @@ public class Constants {
     public static final String PAGE_JSP_UPDATE = "/WEB-INF/views/edit.jsp";
 
     /**
+     * ../login.jsp - the link for login user JSP-page.
+     */
+    public static final String PAGE_JSP_LOGIN = "/WEB-INF/views/login.jsp";
+
+    /**
      * Attribute for model.
      */
     public static final String ATTR_USER = "user";
+
+    /**
+     * Attribute for current user for this session.
+     */
+    public static final String ATTR_CURRENT_USER = "current_user";
+
+    /**
+     * Attribute for current user's login for this session.
+     */
+    public static final String ATTR_LOGIN = "login";
 
     /**
      * Attribute for users list.
@@ -87,4 +117,29 @@ public class Constants {
      * Attribute for users id.
      */
     public static final String ATTR_USER_ID = "id";
+
+    /**
+     * Role admin.
+     */
+    public static final String ROLE_ADMIN = "admin";
+
+    /**
+     * Role user.
+     */
+    public static final String ROLE_USER = "user";
+
+    /**
+     * Attribute for countries.
+     */
+    public static final String ATTR_COUNTRIES = "countries";
+
+    /**
+     * Attribute for cities.
+     */
+    public static final String ATTR_CITIES = "cities";
+
+    /**
+     * Attribute for country.
+     */
+    public static final String ATTR_COUNTRY = "country";
 }

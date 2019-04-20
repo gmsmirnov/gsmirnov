@@ -1,9 +1,8 @@
 package ru.job4j.servlets;
 
-import ru.job4j.servlets.dao.exception.AlreadyExistsModelWithSuchIdException;
-import ru.job4j.servlets.dao.exception.DaoBusinessException;
-import ru.job4j.servlets.dao.exception.DaoSystemException;
-import ru.job4j.servlets.dao.exception.NullArgumentException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.job4j.servlets.dao.exception.*;
 import ru.job4j.servlets.model.User;
 
 import java.util.HashMap;
@@ -14,14 +13,19 @@ import java.util.function.Function;
  * Dispatcher picks up the right logic action depending of type of POST request action param.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.2
  * @since 14/02/2019
  */
 public class Dispatcher {
     /**
+     * The logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(Dispatcher.class.getName());
+
+    /**
      * The logic singleton.
      */
-    private final ValidateService logic = ValidateService.getSingletonValidateServiceInstance();
+    private final Validate logic = ValidateService.getSingletonValidateServiceInstance();
 
     /**
      * The POST request action params are mapped here into the logic actions handles.
@@ -38,12 +42,8 @@ public class Dispatcher {
         return action -> {
             try {
                 this.logic.add(user);
-            } catch (DaoSystemException e) {
-                e.printStackTrace();
-            } catch (AlreadyExistsModelWithSuchIdException e) {
-                e.printStackTrace();
-            } catch (NullArgumentException e) {
-                e.printStackTrace();
+            } catch (DaoSystemException | AlreadyExistsModelWithSuchLoginException | NullArgumentException | NoSuchIdException e) {
+                Dispatcher.LOG.error(e.getMessage(), e);
             }
             return true;
         };
@@ -59,10 +59,8 @@ public class Dispatcher {
         return action -> {
             try {
                 this.logic.update(user);
-            } catch (DaoSystemException e) {
-                e.printStackTrace();
-            } catch (NullArgumentException e) {
-                e.printStackTrace();
+            } catch (DaoSystemException | NullArgumentException | NoSuchIdException e) {
+                Dispatcher.LOG.error(e.getMessage(), e);
             }
             return true;
         };
@@ -78,10 +76,8 @@ public class Dispatcher {
         return action -> {
             try {
                 this.logic.delete(user);
-            } catch (DaoSystemException e) {
-                e.printStackTrace();
-            } catch (NullArgumentException e) {
-                e.printStackTrace();
+            } catch (DaoSystemException | NullArgumentException e) {
+                Dispatcher.LOG.error(e.getMessage(), e);
             }
             return true;
         };

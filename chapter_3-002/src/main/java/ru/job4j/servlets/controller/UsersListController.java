@@ -1,8 +1,8 @@
 package ru.job4j.servlets.controller;
 
-import ru.job4j.servlets.Constants;
-import ru.job4j.servlets.Dispatcher;
-import ru.job4j.servlets.ValidateService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.job4j.servlets.*;
 import ru.job4j.servlets.dao.exception.DaoSystemException;
 import ru.job4j.servlets.dao.exception.NoSuchModelException;
 import ru.job4j.servlets.model.User;
@@ -17,14 +17,19 @@ import java.io.IOException;
  * Servlet for user model.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 07/02/2019
  */
 public class UsersListController extends HttpServlet {
     /**
+     * The logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(UsersListController.class.getName());
+
+    /**
      * The logic singleton instance.
      */
-    private final ValidateService logic = ValidateService.getSingletonValidateServiceInstance();
+    private final Validate logic = ValidateService.getSingletonValidateServiceInstance();
 
     /**
      * Shows the table of all registered users. The GET request. Read method of CRUD service. The GET request.
@@ -39,13 +44,16 @@ public class UsersListController extends HttpServlet {
         try {
             req.setAttribute(Constants.ATTR_USERS_LIST, this.logic.findAll());
         } catch (DaoSystemException e) {
-            /*NOP*/
+            UsersListController.LOG.error(e.getMessage(), e);
         }
+        UsersListController.LOG.info(String.format("Current user: '%s' requested for the list of all users.",
+                req.getSession().getAttribute(Constants.ATTR_LOGIN)));
         req.getRequestDispatcher(Constants.PAGE_JSP_LIST).forward(req, resp);
     }
 
     /**
-     * Create, update and delete methods of CRUD service. The POST request.
+     * Create, update and delete methods of CRUD service. The POST request. If user deletes himself, it redirects to
+     * '/logout' - servlet (SignoutController).
      *
      * @param req - HTTP request.
      * @param resp - HTTP response.
@@ -55,11 +63,19 @@ public class UsersListController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            Dispatcher dispatcher = new Dispatcher(this.logic.findById(Integer.parseInt(req.getParameter(User.PARAM_ID))));
+            User user = this.logic.findById(Integer.parseInt(req.getParameter(User.PARAM_ID)));
+            User currentUser = (User) req.getSession().getAttribute(Constants.ATTR_CURRENT_USER);
+            Dispatcher dispatcher = new Dispatcher(user);
             dispatcher.sent(Constants.ACTION_DELETE);
-            this.doGet(req, resp);
+            UsersListController.LOG.info(String.format("Current user: '%s' asked for delete user '%s'",
+                    currentUser.getLogin(), user.getLogin()));
+            if (user.equals(currentUser)) {
+                resp.sendRedirect(String.format("%s%s", req.getContextPath(), Constants.PAGE_LOGOUT));
+            } else {
+                this.doGet(req, resp);
+            }
         } catch (DaoSystemException | NoSuchModelException e) {
-            /*NOP*/
+            UsersListController.LOG.error(e.getMessage(), e);
         }
     }
 }

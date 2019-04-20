@@ -1,50 +1,70 @@
 package ru.job4j.servlets.controller;
 
-import ru.job4j.servlets.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.job4j.servlets.Constants;
+import ru.job4j.servlets.Validate;
+import ru.job4j.servlets.ValidateService;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * JSON controller.
+ * JSON controller. Used for update the list od cities matched to the specified country.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.0
+ * @version 1.1
  * @since 17/04/2019
  */
 public class JsonController extends HttpServlet {
     /**
-     * Users' storage.
+     * The logger.
      */
-    private final Map<String, User> storage = new ConcurrentHashMap<String, User>();
+    private static final Logger LOG = LogManager.getLogger(JsonController.class.getName());
 
     /**
-     * Forms JSON users table and sends it to "index.html".
+     * The logic singleton instance.
+     */
+    private final Validate logic = ValidateService.getSingletonValidateServiceInstance();
+
+    /**
+     * Appends new user to the storage..
      *
      * @param req - HTTP request.
      * @param resp - HTTP response.
-     * @throws IOException - if getOutputStream or writeValueAsString throws it.
+     * @throws IOException
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            this.prepareResponse(this.logic.findCitiesByCountry(req.getParameter(Constants.ATTR_COUNTRY)), resp);
+        } catch (DaoSystemException e) {
+            JsonController.LOG.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Prepares http-response, puts into it json-array of cities.
+     *
+     * @param resp  resp - HTTP response.
+     * @throws IOException
+     */
+    private void prepareResponse(List<String> cities, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/json");
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        Collection<User> users = storage.values();
         StringBuilder result = new StringBuilder("[");
         int index = 0;
-        for (User user : users) {
-            result.append(mapper.writeValueAsString(user));
-            if (users.size() - index > 1) {
+        for (String city : cities) {
+            result.append(mapper.writeValueAsString(city));
+            if (cities.size() - index > 1) {
                 result.append(",");
             }
             index++;
@@ -52,21 +72,5 @@ public class JsonController extends HttpServlet {
         result.append("]");
         writer.append(result.toString());
         writer.flush();
-    }
-
-    /**
-     * Appends new user to the storage..
-     *
-     * @param req - HTTP request.
-     * @param resp - HTTP response.
-     */
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        this.storage.put(req.getParameter("login"), new User(
-                req.getParameter("login"),
-                req.getParameter("email"),
-                req.getParameter("password"),
-                req.getParameter("country"),
-                req.getParameter("city")));
     }
 }

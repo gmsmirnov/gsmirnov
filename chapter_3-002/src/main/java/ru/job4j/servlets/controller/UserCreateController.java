@@ -1,7 +1,12 @@
 package ru.job4j.servlets.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.job4j.servlets.Constants;
 import ru.job4j.servlets.Dispatcher;
+import ru.job4j.servlets.Validate;
+import ru.job4j.servlets.ValidateService;
+import ru.job4j.servlets.dao.exception.DaoSystemException;
 import ru.job4j.servlets.model.User;
 
 import javax.servlet.ServletException;
@@ -14,10 +19,20 @@ import java.io.IOException;
  * Servlet for creating a new user.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.2
+ * @version 1.3
  * @since 16/02/2019
  */
 public class UserCreateController extends HttpServlet {
+    /**
+     * The logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(UserCreateController.class.getName());
+
+    /**
+     * The logic singleton instance.
+     */
+    private final Validate logic = ValidateService.getSingletonValidateServiceInstance();
+
     /**
      * Shows empty form to create a new user. The GET request.
      *
@@ -28,6 +43,11 @@ public class UserCreateController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            req.setAttribute(Constants.ATTR_COUNTRIES, this.logic.findCountries());
+        } catch (DaoSystemException e) {
+            UserCreateController.LOG.error(e.getMessage(), e);
+        }
         req.getRequestDispatcher(Constants.PAGE_JSP_CREATE).forward(req, resp);
     }
 
@@ -42,12 +62,16 @@ public class UserCreateController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Dispatcher dispatcher = new Dispatcher(new User(
-                req.getParameter(User.PARAM_ID),
-                req.getParameter(User.PARAM_NAME),
                 req.getParameter(User.PARAM_LOGIN),
-                req.getParameter(User.PARAM_EMAIL)
+                req.getParameter(User.PARAM_EMAIL),
+                req.getParameter(User.PARAM_PASSWORD),
+                req.getParameter(User.PARAM_COUNTRY),
+                req.getParameter(User.PARAM_CITY),
+                req.getParameter(User.PARAM_ROLE)
         ));
         dispatcher.sent(Constants.ACTION_CREATE);
+        UserCreateController.LOG.info(String.format("Current user: '%s' created a new user '%s'",
+                req.getSession().getAttribute(Constants.ATTR_LOGIN), req.getParameter(User.PARAM_LOGIN)));
         this.doGet(req, resp);
     }
 }

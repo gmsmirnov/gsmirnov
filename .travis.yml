@@ -28,3 +28,5 @@ before_install:
 - psql -c "CREATE DATABASE tracker;" -U postgres
 - psql -c "CREATE DATABASE sqlru;" -U postgres
 - psql -c "CREATE DATABASE sqlrutest;" -U postgres
+- psql -c "CREATE DATABASE users;" -U postgres
+- psql -c "CREATE DATABASE users_test;" -U postgres
