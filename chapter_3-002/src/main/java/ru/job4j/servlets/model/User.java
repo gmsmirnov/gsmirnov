@@ -1,13 +1,14 @@
 package ru.job4j.servlets.model;
 
-import java.util.Date;
+import ru.job4j.servlets.Constants;
+
 import java.util.Objects;
 
 /**
  * User model description.
  *
  * @author Gregory Smirnov (artress@ngs.ru)
- * @version 1.1
+ * @version 1.3
  * @since 07/02/2019
  */
 public class User {
@@ -15,11 +16,6 @@ public class User {
      * Param "id" in in the POST request.
      */
     public static final String PARAM_ID = "id";
-
-    /**
-     * Param "name" in in the POST request.
-     */
-    public static final String PARAM_NAME = "name";
 
     /**
      * Param "login" in in the POST request.
@@ -32,14 +28,29 @@ public class User {
     public static final String PARAM_EMAIL = "email";
 
     /**
+     * Param "password" in in the POST request.
+     */
+    public static final String PARAM_PASSWORD = "password";
+
+    /**
+     * Param "country" in in the POST request.
+     */
+    public static final String PARAM_COUNTRY = "country";
+
+    /**
+     * Param "city" in in the POST request.
+     */
+    public static final String PARAM_CITY = "city";
+
+    /**
+     * Param "role" in in the POST request.
+     */
+    public static final String PARAM_ROLE = "role";
+
+    /**
      * User's id.
      */
     private int id;
-
-    /**
-     * User's name.
-     */
-    private String name;
 
     /**
      * User's login.
@@ -52,24 +63,101 @@ public class User {
     private String email;
 
     /**
-     * User's creation date.
+     * User's password.
      */
-    private Date createDate;
+    private String password;
+
+    /**
+     * User's country.
+     */
+    private String country;
+
+    /**
+     * User's city.
+     */
+    private String city;
+
+    /**
+     * The role defined to this user.
+     */
+    private String role;
 
     /**
      * Creates a new user with the specified params.
      *
      * @param id - the specified user's id.
-     * @param name - the specified user's name.
      * @param login - the specified user's login.
      * @param email - the specified user's email.
+     * @param password - the specified user's password.
+     * @param country - the specified user's country.
+     * @param city - the specified user's city.
      */
-    public User(String id, String name, String login, String email) {
-        this.id = Integer.parseInt(id);
-        this.name = name;
+    public User(int id, String login, String email, String password, String country, String city) {
+        this.id = id;
         this.login = login;
         this.email = email;
-        this.createDate = new Date();
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.role = Constants.ROLE_USER;
+    }
+
+    /**
+     * Creates a new user with the specified params.
+     *
+     * @param login - the specified user's login.
+     * @param email - the specified user's email.
+     * @param password - the specified user's password.
+     * @param country - the specified user's country.
+     * @param city - the specified user's city.
+     */
+    public User(String login, String email, String password, String country, String city) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.role = Constants.ROLE_USER;
+    }
+
+    /**
+     * Creates a new user with the specified params, including role.
+     *
+     * @param id - the specified user's id.
+     * @param login - the specified user's login.
+     * @param email - the specified user's email.
+     * @param password - the specified user's password.
+     * @param country - the specified user's country.
+     * @param city - the specified user's city.
+     * @param role - the specified role.
+     */
+    public User(int id, String login, String email, String password, String country, String city, String role) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.role = role;
+    }
+
+    /**
+     * Creates a new user with the specified params, including role, without id.
+     *
+     * @param login - the specified user's login.
+     * @param email - the specified user's email.
+     * @param password - the specified user's password.
+     * @param country - the specified user's country.
+     * @param city - the specified user's city.
+     * @param role - the specified role.
+     */
+    public User(String login, String email, String password, String country, String city, String role) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.role = role;
     }
 
     /**
@@ -88,24 +176,6 @@ public class User {
      */
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * Gets user's name.
-     *
-     * @return user's name.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Sets the specified user's name.
-     *
-     * @param name - the specified user's name.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -145,21 +215,75 @@ public class User {
     }
 
     /**
-     * Gets user's creation date.
+     * Gets the user's password.
      *
-     * @return user's creation date.
+     * @return the user's password.
      */
-    public Date getCreateDate() {
-        return this.createDate;
+    public String getPassword() {
+        return this.password;
     }
 
     /**
-     * Sets the specified user's creation date
+     * Sets the specified user's password.
      *
-     * @param createDate - the specified user's creation date.
+     * @param password - the specified user's password.
      */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * Gets user's country.
+     *
+     * @return user's country.
+     */
+    public String getCountry() {
+        return this.country;
+    }
+
+    /**
+     * Sets the specified user's county.
+     *
+     * @param country - the specified user's county.
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * Gets user's city.
+     *
+     * @return user's city.
+     */
+    public String getCity() {
+        return this.city;
+    }
+
+    /**
+     * Sets the specified user's city.
+     *
+     * @param city - the specified user's city.
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Gets the role defined to this user.
+     *
+     * @return - the role specified to this user.
+     */
+    public String getRole() {
+        return this.role;
+    }
+
+    /**
+     * Sets the specified role to this user.
+     *
+     * @param role - the specified role.
+     */
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -177,10 +301,12 @@ public class User {
             result = false;
         } else {
             User user = (User) o;
-            result = this.id == user.id
-                    && Objects.equals(this.name, user.name)
-                    && Objects.equals(this.login, user.login)
-                    && Objects.equals(this.email, user.email);
+            result = Objects.equals(this.login, user.login)
+                    && Objects.equals(this.email, user.email)
+                    && Objects.equals(this.password, user.password)
+                    && Objects.equals(this.country, user.country)
+                    && Objects.equals(this.city, user.city)
+                    && Objects.equals(this.role, user.role);
         }
         return result;
     }
@@ -192,7 +318,7 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.login, this.email);
+        return Objects.hash(this.login, this.email, this.password, this.country, this.city, this.role);
     }
 
     /**
@@ -202,7 +328,7 @@ public class User {
      */
     @Override
     public String toString() {
-        return String.format("%nUser {id=%d, name='%s, login='%s, email='%s, createDate=%s}%n",
-                this.id, this.name, this.login, this.email, this.createDate);
+        return String.format("User {id=%d, login='%s', email='%s', country='%s', city='%s', role='%s'}",
+                this.id, this.login, this.email, this.country, this.city, this.role);
     }
 }
