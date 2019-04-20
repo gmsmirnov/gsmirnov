@@ -8,40 +8,126 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+        /**
+         * Validates if "login", "password", "email" or "description" are empty and alerts.
+         *
+         * @returns {boolean} true if there is no one of those fields is empty.
+         */
         function validate() {
             var result = true;
-            if (document.getElementsByName("firstname")[0].value == '') {
-                alert("Please correct first name.");
+            if (document.getElementsByName("login")[0].value == '') {
+                alert("Please correct login.");
                 result = false;
-            } else if (document.getElementsByName("lastname")[0].value == '') {
-                alert("Please correct last name.");
+            } else if (document.getElementsByName("password")[0].value == '') {
+                alert("Please correct password.");
                 result = false;
             } else if (document.getElementsByName("email")[0].value == '') {
                 alert("Please correct email.");
                 result = false;
             } else if (document.getElementsByName("description")[0].value == '') {
-            alert("Please correct description.");
-            result = false;
+                alert("Please correct description.");
+                result = false;
             }
             return result;
         }
 
-        function addRow() {
-            var name = $('#firstname').val();
-            var surname = $('#lastname').val();
-            var mail = $('#email').val();
-            $('#table tr:last').after(
-                '<tr><td>' + name + '</td>'
-                + '<td>' + surname + '</td>'
-                + '<td>' + mail + '</td></tr>'
-            );
-        }
-
+        /**
+         * Append a new user to the table. Consists of two parts: first validates input, second create POST request
+         * to "jsonController".
+         */
         function add() {
             if (validate()) {
-                addRow();
+                createUser();
             }
         }
+
+        /**
+         * Creates POST request to jsonController and transfers new user's specification.
+         * @returns {boolean} false
+         */
+        function createUser() {
+            $.ajax("./json", {
+                method : "post",
+                data : {
+                    login : $("#login").val(),
+                    password : $("#password").val(),
+                    email : $("#email").val(),
+                    country : $("#country").val(),
+                    city : $("#city").val()
+                },
+                success : updateTable()
+            });
+            return false;
+        }
+
+        /**
+         * Updates table after new user creation.
+         */
+        function updateTable() {
+            $.ajax("./json", {
+                method : "get",
+                complete : function(data) {
+                    console.log(JSON.parse(data.responseText));
+                    var result =
+                        "<thead>" +
+                        "   <tr>" +
+                        "       <th>Login</th>" +
+                        "       <th>Email</th>" +
+                        "       <th>Country</th>" +
+                        "       <th>City</th>" +
+                        "   </tr>" +
+                        "</thead>" +
+                        "<tbody>";
+                    var users = JSON.parse(data.responseText);
+                    for (var index = 0; index < users.length; index++) {
+                        result += "<tr>" +
+                            "                <th>" + users[index].login + "</th>" +
+                            "                <th>" + users[index].email + "</th>" +
+                            "                <th>" + users[index].country + "</th>" +
+                            "                <th>" + users[index].city + "</th>" +
+                            "            </tr>";
+                    }
+                    result += "</tbody>";
+                    var table = document.getElementById("table");
+                    table.innerHTML = result;
+                }
+            })
+        }
+
+        /**
+         * F5 - reloads page and current table.
+         */
+        $(
+            $.ajax("./json", {
+                method : "get",
+                complete : function(data) {
+                    console.log(JSON.parse(data.responseText));
+                    var result =
+                        "<thead>" +
+                        "   <tr>" +
+                        "       <th>Login</th>" +
+                        "       <th>Email</th>" +
+                        "       <th>Country</th>" +
+                        "       <th>City</th>" +
+                        "   </tr>" +
+                        "</thead>" +
+                        "<tbody>";
+                    var users = JSON.parse(data.responseText);
+                    for (var index = 0; index < users.length; index++) {
+                        result += "<tr>" +
+                        "                <th>" + users[index].login + "</th>" +
+                        "                <th>" + users[index].email + "</th>" +
+                        "                <th>" + users[index].country + "</th>" +
+                        "                <th>" + users[index].city + "</th>" +
+                        "            </tr>";
+                    }
+                    result += "</tbody>";
+                    var table = document.getElementById("table");
+                    table.innerHTML = result;
+                }
+            })
+        );
+
     </script>
 </head>
 <body>
@@ -50,12 +136,12 @@
         <form action="" method="post" onsubmit="add(); return false;">
             <h2>Add user</h2>
             <div class="form-group">
-            <label for="firstname">First name:</label><br/>
-            <input type="text" name="firstname" id="firstname">
+            <label for="login">Login:</label><br/>
+            <input type="text" name="login" id="login">
             </div>
             <div class="form-group">
-            <label for="lastname">Last name:</label><br/>
-            <input type="text" name="lastname" id="lastname">
+            <label for="password">Password:</label><br/>
+            <input type="password" name="password" id="password">
             </div>
             <div class="form-group">
             <label for="email">E-mail:</label><br/>
@@ -67,13 +153,21 @@
             <input type="radio" name="gender" value="male" checked> Male<br>
             <input type="radio" name="gender" value="female"> Female<br>
             </div>
+            <div class="country">
+                <label for="country">Country:</label><br/>
+                <input type="text" name="country" id="country">
+            </div>
+            <div class="city">
+                <label for="login">City:</label><br/>
+                <input type="text" name="city" id="city">
+            </div>
             <div class="form-group">
             <label>Description:</label>
             <br/>
             <textarea name="description" rows="10" cols="30">Write down description here.</textarea>
             </div>
             <br/>
-            <div class="form-group"><input type="submit" value="Submit" name="submit">
+            <div class="form-group"><input type="button" value="Ajax" name="ajax" onclick="return add();">
             </div>
         </form>
     </div>
@@ -83,27 +177,14 @@
         <table class="table table-striped" id="table">
             <thead>
             <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
+                <th>Login</th>
                 <th>Email</th>
+                <th>Country</th>
+                <th>City</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>john@example.com</td>
-            </tr>
-            <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>mary@example.com</td>
-            </tr>
-            <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                <td>july@example.com</td>
-            </tr>
+
             </tbody>
         </table>
     </div>
