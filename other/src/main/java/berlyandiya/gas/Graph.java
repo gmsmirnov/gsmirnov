@@ -103,6 +103,20 @@ public class Graph {
     }
 
     /**
+     * Searches for the minimum weight.
+     *
+     * @return the minimum weight.
+     */
+    public int minWeight() {
+        List<Integer> weights = new LinkedList<Integer>();
+        for (Node node : this.getNodes()) {
+            weights.addAll(node.getWeights());
+        }
+        weights.sort(Logic.weightsComparator);
+        return weights.get(0);
+    }
+
+    /**
      * The String representation of the graph.
      *
      * @return the String representation of the graph.
