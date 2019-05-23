@@ -1,15 +1,43 @@
 package string;
 
 public class NumberReplace {
+    public static void main(String[] args) {
+        System.out.println(NumberReplace.replaceNumbers("abc5x"));
+    }
+
     public static String replaceNumbers(String input) {
         StringBuilder temp = new StringBuilder();
-        String result = "";
-        for (int index = 0; index < input.length(); index++) {
-            if (input.charAt(index) == '0' || input.charAt(index) == '1' || input.charAt(index) == '2' || input.charAt(index) == '3' ||
-                    input.charAt(index) == '4' || input.charAt(index) == '5' || input.charAt(index) == '6' ||
-                    input.charAt(index) == '7' || input.charAt(index) == '8' || input.charAt(index) == '9') {
-                temp.append(input.charAt(index));
+        StringBuilder result = new StringBuilder();
+        boolean flag = false;
+        char next;
+        char current;
+        for (int index = 0; index < input.length() - 1; index++) {
+            current = input.charAt(index);
+            next = input.charAt(index + 1);
+            if (NumberReplace.isNumber(current)) {
+                temp.append(current);
+                flag = true;
             }
+
+
+
+                temp.append(current);
+                current = input.charAt(index + 1);
+
+            if (temp.length() > 0) {
+                System.out.println(Integer.parseInt(temp.toString()));
+            }
+            result.append(input.charAt(index));
+        }
+        return result.toString();
+    }
+
+    public static boolean isNumber(char ch) {
+        boolean result = false;
+        if (ch == '0' || ch == '1' || ch == '2' || ch == '3'
+                || ch == '4' || ch == '5' || ch == '6'
+                || ch == '7' || ch == '8' || ch == '9') {
+            result = true;
         }
         return result;
     }
